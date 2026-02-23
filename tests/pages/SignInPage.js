@@ -21,7 +21,7 @@ exports.SignInPage = class SignInPage {
 
     this.SendNewCode = page.getByRole('button', { name: /send new code/i });
     this.ResendOtpCode = page.getByRole('button', { name: 'Resend Code' });
-    this.OtpResendSuccess = page.getByTestId('otp-resend-success');
+    //this.OtpResendSuccess = page.getByTestId('otp-resend-success');
   }
 
   async gotoHome() {
