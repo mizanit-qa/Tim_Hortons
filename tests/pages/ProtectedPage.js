@@ -18,4 +18,13 @@ exports.ProtectedPage = class ProtectedPage {
        
     }
 
+    async passwordProtectionSignup(){
+        await this.page.goto('https://staging-th-web.ca.rbi.tools/signup');
+        await this.page.locator(this.SitePasswor).fill('rbi-tech');
+        await this.page.locator(this.SubmitBtn).click();
+        await this.page.locator(this.CookiesClose).click();
+        await this.page.locator(this.LanguageApplyBtn).click();
+       
+    }
+
 }
