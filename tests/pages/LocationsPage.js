@@ -4,9 +4,9 @@ exports.LocationsPage = class LocationsPage {
         this.page = page;
         this.yourAddress = page.getByTestId("storelocator-autocomplete");
         this.storeAccordionBtn = page.getByRole('button', { name: /1500 woodbine ave\./i });
-        //this.storeAccordionBtn = "//div[@id='tabpanel-0']//button[contains(@aria-label,'1500 woodbine ave. Open Accordion')]";
-        this.yourAddress = page.getByTestId("storelocator-autocomplete"); // это input
+        this.yourAddress = page.getByTestId("storelocator-autocomplete");
         this.firstSuggestion = page.locator("#downshift-0-item-0");
+        this.storeOrderBtn = page.getByRole('button', { name: /^Order$/i });
         
 
 
@@ -16,7 +16,7 @@ exports.LocationsPage = class LocationsPage {
 
     async storeSelection (){
         await this.yourAddress.click();
-        await this.yourAddress.fill("1500 Woodbine");
+        await this.yourAddress.fill("1500 Woodbine Ave");
 
         // дождаться списка
         await this.page.locator("#downshift-0-menu").waitFor({ state: "visible", timeout: 15000 });
