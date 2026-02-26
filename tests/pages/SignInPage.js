@@ -7,7 +7,8 @@ exports.SignInPage = class SignInPage {
     this.SignInBtnLanding = page.getByRole("button", { name: /^Sign In$/ });
     this.LanguageSelector = page.getByRole("button", { name: /Language and region selector/i });
     this.CALanguageRadioBtn = page.locator("span[data-testid='dialog-button-en-ca_label_wrapper']");
-    this.ApplyBtn = page.locator("button").filter({ hasText: /apply/i });
+    //this.ApplyBtn = page.locator("button").filter({ hasText: /apply/i });
+    this.ApplyBtn = page.locator('div[role="dialog"]').getByRole('button', { name: /^Apply$/i });
 
     // Stable email locator (choose one)
     this.UserEmail = page.getByRole("textbox", { name: /email/i }); // best if label exists

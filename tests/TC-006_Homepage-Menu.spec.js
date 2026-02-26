@@ -12,7 +12,7 @@ test('Homepage - Menu', async ({ page }) => {
 
     await sitepass.passwordProtection({ timeout: 5000 });
 
-    await signin.gotoHome();
+    //await signin.gotoHome();
 
     await signin.userSignIn('timregression+95@gmail.com');
 
