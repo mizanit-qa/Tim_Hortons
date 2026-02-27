@@ -25,6 +25,9 @@ exports.HomePage = class HomePage{
     async timsCatering(){
         await this.cateringLink.click();
     }
-
+    
+    async timShop(){
+        await this.timShopLink.click();
+    }
 
 }
