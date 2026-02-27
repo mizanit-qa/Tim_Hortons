@@ -16,9 +16,6 @@ test('Homepage - Menu', async ({ page }) => {
   await sitepass.passwordProtection({ timeout: 5000 });
   await signin.userSignIn('timregression+95@gmail.com');
 
-  // ✅ remove fixed sleeps if possible; keeping yours for now
-  // await page.waitForTimeout(5000);
-
   await page.waitForTimeout(5000);
   await homepage.timsforGood();
 
