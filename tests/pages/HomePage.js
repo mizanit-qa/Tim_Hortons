@@ -9,6 +9,7 @@ exports.HomePage = class HomePage{
         this.timShopLink = page.getByTestId('TimShop');
         this.moreLink = page.getByTestId('More');
         this.timsforGoodLink = page.getByTestId('Tims for Good');
+        this.cateringLink = page.getByTestId('Tims Catering');
 
 
     }
@@ -19,6 +20,10 @@ exports.HomePage = class HomePage{
 
     async timsforGood(){
         await this.timsforGoodLink.click();
+    }
+
+    async timsCatering(){
+        await this.cateringLink.click();
     }
 
 
