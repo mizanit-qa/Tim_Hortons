@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { SignInPage } from './pages/SignInPage';
-import { ProtectedPage } from './pages/ProtectedPage';
+import { SignInPage } from '../pages/SignInPage';
+import { ProtectedPage } from '../pages/ProtectedPage';
 
 test('Existing User Sign In', async ({ page }) => {
     const sitepass = new ProtectedPage(page);
