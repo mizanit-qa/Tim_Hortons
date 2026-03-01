@@ -8,5 +8,16 @@ exports.MenuItems = class MenuItems {
 
     }
 
+    async clickHotDrinks() {
+        await this.hotDrinksTile.click();
+    }
+
+    async clickColdDrinks() {
+        await this.coldDrinksTile.click();
+    }
+
+    async clickNewAndSeasonal() {
+        await this.newandSeasonalTile.click();
+    }
 
 }
