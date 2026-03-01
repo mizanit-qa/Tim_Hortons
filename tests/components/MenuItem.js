@@ -2,8 +2,10 @@ exports.MenuItems = class MenuItems {
 
     constructor(page) {
         this.page = page;
-        this.menuGrid = page.getByTestId('menu-tile-grid');
-        this.menuTiles = this.menuGrid.locator('a'); // each tile is a link
+        this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
+        this.coldDrinksTile = page.getByRole('link', { name: /Cold Drinks/i });
+        this.newandSeasonalTile = page.getByRole('link', { name: /New & Seasonal/i });
+
     }
 
 
