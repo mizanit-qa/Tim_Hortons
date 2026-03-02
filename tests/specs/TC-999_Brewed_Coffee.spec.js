@@ -18,6 +18,7 @@ test('Brewed Coffee Selection', async ({ page }) => {
 
     await sitepass.passwordProtection({ timeout: 5000 });
     await signin.userSignIn('timregression+95@gmail.com');
+    await page.waitForTimeout(5000);
 
     await homepage.homepageMenu();
     await location.storeSelection();

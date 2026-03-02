@@ -21,9 +21,9 @@ exports.LocationsPage = class LocationsPage {
         // дождаться списка
         await this.page.locator("#downshift-0-menu").waitFor({ state: "visible", timeout: 15000 });
         await this.firstSuggestion.click();
-        await this.page.waitForTimeout(5000);
+        //await this.page.waitForTimeout(5000);
         await this.storeAccordionBtn.click();
-        await this.page.waitForTimeout(5000);
+        //await this.page.waitForTimeout(5000);
         await this.storeOrderBtn.click();
     }
 
