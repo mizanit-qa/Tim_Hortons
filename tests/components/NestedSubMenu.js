@@ -1,4 +1,4 @@
-exports.nestedSubMenu = class nestedSubMenu {
+export class nestedSubMenu {
 
     constructor(page) {
         this.page = page;

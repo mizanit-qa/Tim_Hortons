@@ -1,4 +1,4 @@
-exports.Submenu = class Submenu {
+export class Submenu {
 
     constructor(page) {
         this.page = page;

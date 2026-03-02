@@ -22,17 +22,11 @@ test('Brewed Coffee Selection', async ({ page }) => {
     await homepage.homepageMenu();
     await location.storeSelection();
 
-    //await expect(page).toBeVisible({ timeout: 5000 });
+    await menuItems.openMenu();
     await menuItems.clickHotDrinks();
     
-    await expect(page).toBeVisible({ timeout: 5000 });
     await submenu.clickBrewedCoffee();
     await nestedsubmenu.clickBrewedCoffee();
-
+    
     await page.waitForTimeout(15000);
-
-
-
-
-
-})
+    });

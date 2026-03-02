@@ -8,10 +8,6 @@ exports.LocationsPage = class LocationsPage {
         this.firstSuggestion = page.locator("#downshift-0-item-0");
         this.storeOrderBtn = page.getByRole('button', { name: /^Order$/i });
         
-
-
-
-        
     }
 
     async storeSelection (){
@@ -25,6 +21,8 @@ exports.LocationsPage = class LocationsPage {
         await this.firstSuggestion.click();  
         await this.storeAccordionBtn.click();
         await this.storeOrderBtn.click();
+
+        
     }
 
 
