@@ -25,11 +25,11 @@ test('Brewed Coffee Selection', async ({ page }) => {
     //await expect(page).toBeVisible({ timeout: 5000 });
     await menuItems.clickHotDrinks();
     
-    await expect(page).toBeVisible({ timeout: 5000 });
+    //await expect(page).toBeVisible({ timeout: 5000 });
     await submenu.clickBrewedCoffee();
     await nestedsubmenu.clickBrewedCoffee();
 
-    await page.waitForTimeout(15000);
+    //await page.waitForTimeout(15000);
 
 
 
