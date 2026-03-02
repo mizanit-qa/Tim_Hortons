@@ -2,13 +2,13 @@ import { test } from '@playwright/test';
 import fs from 'fs/promises';
 import path from 'path';
 
-import { ProtectedPage } from './pages/ProtectedPage';
-import { SignInPage } from './pages/SignInPage';
-import { HomePage } from './pages/HomePage';
-import { LocationsPage } from './pages/LocationsPage';
-import { MenuPage } from './pages/MenuPage';
+import { ProtectedPage } from '../pages/ProtectedPage';
+import { SignInPage } from '../pages/SignInPage';
+import { HomePage } from '../pages/HomePage';
+import { LocationsPage } from '../pages/LocationsPage';
+import { MenuPage } from '../pages/MenuPage';
 
-import { sortNormalize, difference } from './utils/compareLists';
+import { sortNormalize, difference } from '../utils/compareLists';
 
 test('Homepage - Menu', async ({ page }) => {
   const sitepass = new ProtectedPage(page);

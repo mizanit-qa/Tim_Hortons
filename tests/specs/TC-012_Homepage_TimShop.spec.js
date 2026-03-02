@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { ProtectedPage } from './pages/ProtectedPage';
-import { SignInPage } from './pages/SignInPage';
-import { HomePage } from './pages/HomePage';
-import { TimShopPage } from './pages/TimShopPage';
+import { ProtectedPage } from '../pages/ProtectedPage';
+import { SignInPage } from '../pages/SignInPage';
+import { HomePage } from '../pages/HomePage';
+import { TimShopPage } from '../pages/TimShopPage';
 
 
 
