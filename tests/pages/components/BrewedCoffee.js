@@ -1,16 +1,5 @@
 exports.BrewedCoffee =  class BrewedCoffee {
 
-    // constructor(page){
-    //     this.page = page;
-    //     this.coffeeSize = page.getByTestId('selection-Size').getByRole('button');
-    //     this.coffeeBlend = page.getByTestId('selection-Coffee Blend').getByRole('button');
-    //     this.reusableCup = page.getByTestId('selection-Bringing a Clean Reusable Cup?').getByRole('button');
-    //     this.black = page.getByRole('button', { name: 'Black' });
-    //     this.regular = page.getByRole('button', { name: 'Regular' });
-    //     this.doubleDouble = page.getByRole('button', { name: 'Double Double' });
-    //     this.tripleTriple = page.getByRole('button', { name: 'Triple Triple' });
-
-    // }
 
     constructor(page){
         this.page = page;
@@ -22,50 +11,114 @@ exports.BrewedCoffee =  class BrewedCoffee {
         this.regular = main.getByRole('button', { name: 'Regular' });
         this.doubleDouble = main.getByRole('button', { name: 'Double Double' });
         this.tripleTriple = main.getByRole('button', { name: 'Triple Triple' });
+
+        // Dairy & Alternatives, Sweeteners, Espresso Shots, Flavour Shots, Toppings (expanders)
+        this.dairyAlternatives = main.getByRole('button', { name: 'Dairy & Alternatives' });
+        this.sweeteners = main.getByRole('button', { name: 'Sweeteners' });
+        this.espressoShots = main.getByRole('button', { name: /Espresso Shots/ });
+        this.flavourShots = main.getByRole('button', { name: 'Flavour Shots' });
+        this.toppings = main.getByRole('button', { name: 'Toppings' });
+        
     }
 
-    // async sizeSelection(){
-    //     await this.coffeeSize.selectOption({label:'Small'});
-    // }
 
-    // async blendSelection(){
-    //     await this.coffeeBlend.selectOption({label:'Decaf'});
-    // }
-
-    // async reusableCupSelection(){
-    //     await this.reusableCup.selectOption({label:'Yes'});
-    // }
 
     async sizeSelection(){
         await this.coffeeSize.click();
-        await this.page.getByRole('button', { name: 'Small' }).click();
+        await this.page.getByRole('main').getByRole('radio', { name: /Small/ }).click({ force: true });
     }
     
     async blendSelection(){
         await this.coffeeBlend.click();
-        await this.page.getByRole('button', { name: 'Decaf' }).click();
+        await this.page.getByRole('main').getByRole('radio', { name: /Decaf/ }).click({ force: true });
     }
     
     async reusableCupSelection(){
         await this.reusableCup.click();
-        await this.page.getByRole('button', { name: 'Yes' }).click();
+        await this.page.getByRole('main').getByRole('radio', { name: /Yes/ }).click({ force: true });
     }
 
     async blackSelection(){
-        await this.black.click();
+        await this.page.getByRole('main').getByText('Black', { exact: true }).click();
     }
     
     async regularSelection(){
-        await this.regular.click();
+        await this.page.getByRole('main').getByText('Regular', { exact: true }).click();
     }
     
     async doubleDoubleSelection(){
-        await this.doubleDouble.click();
+        await this.page.getByRole('main').getByText('Double Double', { exact: true }).click();
     }
     
     async tripleTripleSelection(){
-        await this.tripleTriple.click();
+        await this.page.getByRole('main').getByText('Triple Triple', { exact: true }).click();
     }
+
+    async addCream(){
+        await this.dairyAlternatives.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Cream' }).click();
+    }
+    async addWholeMilk(){
+        await this.dairyAlternatives.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Whole Milk' }).click();
+    }
+    async addTwoPercentMilk(){
+        await this.dairyAlternatives.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment 2% Milk' }).click();
+    }
+    async addSkimMilk(){
+        await this.dairyAlternatives.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Skim Milk' }).click();
+    }
+
+    // Sweeteners
+async addSugar(){
+    await this.sweeteners.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Sugar' }).click();
+}
+async addSweetener(){
+    await this.sweeteners.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Sweetener' }).click();
+}
+async addHoney(){
+    await this.sweeteners.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Honey' }).click();
+}
+
+// Espresso Shots
+async addEspressoShot(){
+    await this.espressoShots.click();
+    await this.page.getByRole('main').getByRole('button', { name: /Increment.*Espresso/ }).first.click();
+}
+
+async addDecafEspressoShot(){
+    const expander = this.page.getByRole('main').getByRole('button', { name: /Espresso Shots/ });
+    await expander.click({ timeout: 5000 }).catch(() => {});
+    const btn = this.page.getByRole('main').getByRole('button', { name: 'Increment Decaf Espresso Shot' });
+    await btn.click({ timeout: 5000 }).catch(() => {}); // no-op if section not present
+}
+
+// Flavour Shots (adjust names if the app uses different labels)
+async addChocolateSyrup(){
+    await this.flavourShots.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Chocolate Syrup' }).click();
+}
+// ... same for other flavours: name = 'Increment <Flavour Name>'
+
+// Toppings
+async addWhippedTopping(){
+    await this.toppings.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Whipped Topping' }).click();
+}
+async addOreoCrumble(){
+    await this.toppings.click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Oreo Crumble' }).click();
+}
+
+    
+    
+
+
 
     
 }

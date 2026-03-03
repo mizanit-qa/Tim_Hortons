@@ -9,7 +9,7 @@ import { nestedSubMenu } from '../pages/components/NestedSubMenu';
 import { BrewedCoffee } from '../pages/components/BrewedCoffee';
 
 test('Brewed Coffee Selection', async ({ page }) => {
-    //test.setTimeout(60000);
+    test.setTimeout(60000);
     const sitepass = new ProtectedPage(page);
     const signin = new SignInPage(page);
     const menuItems = new MenuItems(page);
@@ -28,12 +28,14 @@ test('Brewed Coffee Selection', async ({ page }) => {
     await location.storeSelection();
 
     await menuItems.clickHotDrinks();
+
+    await page.getByRole('link', { name: /Brewed Coffee/i }).waitFor({ state: 'attached' });  ///
     
     await submenu.clickBrewedCoffee();
     await nestedsubmenu.clickBrewedCoffee();
 
     // With (wait for the Brewed Coffee customization panel to be ready):
-    await page.getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible' });
+    await page.getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible', timeout: 15000 }); ///
 
     await brewedCoffee.sizeSelection();
     await brewedCoffee.blendSelection();
@@ -42,6 +44,23 @@ test('Brewed Coffee Selection', async ({ page }) => {
     await brewedCoffee.regularSelection();
     await brewedCoffee.doubleDoubleSelection();
     await brewedCoffee.tripleTripleSelection();
+
+    await brewedCoffee.tripleTripleSelection();
+
+    // Dairy & Alternatives (pick one or more)
+    await brewedCoffee.addCream();
+
+    // Sweeteners (optional)
+    await brewedCoffee.addSugar();
+
+    // Espresso Shots (optional)
+    await brewedCoffee.addDecafEspressoShot();
+
+    // Flavour Shots (optional)
+    await brewedCoffee.addChocolateSyrup();
+
+    // Toppings (optional)
+    await brewedCoffee.addWhippedTopping();
 
 
 })

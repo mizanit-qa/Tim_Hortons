@@ -7,6 +7,7 @@ exports.Submenu = class Submenu {
     }
 
     async clickBrewedCoffee() {
+        await this.brewedCoffeeTile.waitFor({ state: 'attached' });
         await this.brewedCoffeeTile.click();
 
 }
