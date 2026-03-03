@@ -1,13 +1,15 @@
 import { expect,test } from '@playwright/test';
 import { ProtectedPage } from '../pages/ProtectedPage';
 import { SignInPage } from '../pages/SignInPage';
-import { MenuItems } from '../components/MenuItem';
+import { MenuItems } from '../pages/components/MenuItem';
 import { LocationsPage } from '../pages/LocationsPage';
 import { HomePage } from '../pages/HomePage';
-import { Submenu } from '../components/SubMenu';
-import { nestedSubMenu } from '../components/NestedSubMenu';
+import { Submenu } from '../pages/components/SubMenu';
+import { nestedSubMenu } from '../pages/components/NestedSubMenu';
+import { BrewedCoffee } from '../pages/components/BrewedCoffee';
 
 test('Brewed Coffee Selection', async ({ page }) => {
+    //test.setTimeout(60000);
     const sitepass = new ProtectedPage(page);
     const signin = new SignInPage(page);
     const menuItems = new MenuItems(page);
@@ -15,18 +17,31 @@ test('Brewed Coffee Selection', async ({ page }) => {
     const homepage = new HomePage(page);
     const submenu = new Submenu(page);
     const nestedsubmenu = new nestedSubMenu(page);
+    const brewedCoffee = new BrewedCoffee(page);
+
 
     await sitepass.passwordProtection({ timeout: 5000 });
     await signin.userSignIn('timregression+95@gmail.com');
+    await page.waitForTimeout(5000);
 
     await homepage.homepageMenu();
     await location.storeSelection();
 
-    await menuItems.openMenu();
     await menuItems.clickHotDrinks();
     
     await submenu.clickBrewedCoffee();
     await nestedsubmenu.clickBrewedCoffee();
-    
-    await page.waitForTimeout(15000);
-    });
+
+    // With (wait for the Brewed Coffee customization panel to be ready):
+    await page.getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible' });
+
+    await brewedCoffee.sizeSelection();
+    await brewedCoffee.blendSelection();
+    await brewedCoffee.reusableCupSelection();
+    await brewedCoffee.blackSelection();
+    await brewedCoffee.regularSelection();
+    await brewedCoffee.doubleDoubleSelection();
+    await brewedCoffee.tripleTripleSelection();
+
+
+})

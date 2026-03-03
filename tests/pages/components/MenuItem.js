@@ -4,7 +4,8 @@ export class MenuItems {
 
     constructor(page) {
         this.page = page;
-        this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
+        //this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
+        this.hotDrinksTile = page.locator("//a[normalize-space()='Hot Drinks']");
         this.coldDrinksTile = page.getByRole('link', { name: /Cold Drinks/i });
         this.newandSeasonalTile = page.getByRole('link', { name: /New & Seasonal/i });
 

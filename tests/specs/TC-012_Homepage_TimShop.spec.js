@@ -20,7 +20,7 @@ test('Homepage - Menu', async ({ page }) => {
   await homepage.timShop();
 
   // Wait for Tims for Good page to load (URL)
-  await expect(page).toHaveURL(/tims-for-good/i, { timeout: 15000 });
+  await expect(page).toHaveURL(/timhortonsshop/i, { timeout: 15000 });
 
   // Verify page content: heading or any visible "Tims Catering" text (longer timeout for slow load)
   const heading = page.getByRole('heading', { name: /Tim Shop/i });
