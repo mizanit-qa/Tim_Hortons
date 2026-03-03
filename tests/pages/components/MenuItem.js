@@ -1,4 +1,6 @@
-exports.MenuItems = class MenuItems {
+import { expect } from '@playwright/test';
+
+export class MenuItems {
 
     constructor(page) {
         this.page = page;
@@ -9,8 +11,16 @@ exports.MenuItems = class MenuItems {
 
     }
 
+    async openMenu() {
+        await this.menuLink.click();
+        await expect(this.page).toHaveURL(/\/menu/i);
+        await expect(this.hotDrinksTile).toBeVisible();
+    }
+
     async clickHotDrinks() {
+        await expect(this.hotDrinksTile).toBeVisible();
         await this.hotDrinksTile.click();
+
     }
 
     async clickColdDrinks() {
@@ -22,3 +32,5 @@ exports.MenuItems = class MenuItems {
     }
 
 }
+
+

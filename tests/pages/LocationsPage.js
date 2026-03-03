@@ -21,6 +21,8 @@ exports.LocationsPage = class LocationsPage {
         
         await this.storeAccordionBtn.click();
         await this.storeOrderBtn.click();
+
+        
     }
 
 
