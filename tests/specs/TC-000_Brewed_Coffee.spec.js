@@ -54,13 +54,18 @@ test('Brewed Coffee Selection', async ({ page }) => {
     await brewedCoffee.addSugar();
 
     // Espresso Shots (optional)
-    await brewedCoffee.addDecafEspressoShot();
+   // await brewedCoffee.addDecafEspressoShot();
 
     // Flavour Shots (optional)
     await brewedCoffee.addChocolateSyrup();
 
     // Toppings (optional)
     await brewedCoffee.addWhippedTopping();
+
+    await brewedCoffee.setQuantityTo(3);
+    await brewedCoffee.addToOrder();
+
+    await page.waitForTimeout(10000);
 
 
 })

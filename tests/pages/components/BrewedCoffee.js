@@ -18,6 +18,8 @@ exports.BrewedCoffee =  class BrewedCoffee {
         this.espressoShots = main.getByRole('button', { name: /Espresso Shots/ });
         this.flavourShots = main.getByRole('button', { name: 'Flavour Shots' });
         this.toppings = main.getByRole('button', { name: 'Toppings' });
+        this.selectQuantity = main.getByRole('button', { name: 'Select Quantity' });
+
         
     }
 
@@ -72,51 +74,63 @@ exports.BrewedCoffee =  class BrewedCoffee {
     }
 
     // Sweeteners
-async addSugar(){
-    await this.sweeteners.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Sugar' }).click();
-}
-async addSweetener(){
-    await this.sweeteners.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Sweetener' }).click();
-}
-async addHoney(){
-    await this.sweeteners.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Honey' }).click();
-}
+    async addSugar(){
+        await this.sweeteners.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Sugar' }).click();
+    }
+    async addSweetener(){
+        await this.sweeteners.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Sweetener' }).click();
+    }
+    async addHoney(){
+        await this.sweeteners.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Honey' }).click();
+    }
 
-// Espresso Shots
-async addEspressoShot(){
-    await this.espressoShots.click();
-    await this.page.getByRole('main').getByRole('button', { name: /Increment.*Espresso/ }).first.click();
-}
+    // Espresso Shots
+    async addEspressoShot(){
+        await this.espressoShots.click();
+        await this.page.getByRole('main').getByRole('button', { name: /Increment.*Espresso/ }).first.click();
+    }
 
-async addDecafEspressoShot(){
-    const expander = this.page.getByRole('main').getByRole('button', { name: /Espresso Shots/ });
-    await expander.click({ timeout: 5000 }).catch(() => {});
-    const btn = this.page.getByRole('main').getByRole('button', { name: 'Increment Decaf Espresso Shot' });
-    await btn.click({ timeout: 5000 }).catch(() => {}); // no-op if section not present
-}
+    async addDecafEspressoShot(){
+        const expander = this.page.getByRole('main').getByRole('button', { name: /Espresso Shots/ });
+        await expander.click({ timeout: 5000 }).catch(() => {});
+        const btn = this.page.getByRole('main').getByRole('button', { name: 'Increment Decaf Espresso Shot' });
+        await btn.click({ timeout: 5000 }).catch(() => {}); // no-op if section not present
+    }
 
-// Flavour Shots (adjust names if the app uses different labels)
-async addChocolateSyrup(){
-    await this.flavourShots.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Chocolate Syrup' }).click();
-}
-// ... same for other flavours: name = 'Increment <Flavour Name>'
 
-// Toppings
-async addWhippedTopping(){
-    await this.toppings.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Whipped Topping' }).click();
-}
-async addOreoCrumble(){
-    await this.toppings.click();
-    await this.page.getByRole('main').getByRole('button', { name: 'Increment Oreo Crumble' }).click();
-}
+    // Flavour Shots (adjust names if the app uses different labels)
+    async addChocolateSyrup(){
+        await this.flavourShots.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Chocolate Syrup' }).click();
+    }
+    // ... same for other flavours: name = 'Increment <Flavour Name>'
 
-    
-    
+    // Toppings
+    async addWhippedTopping(){
+        await this.toppings.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Whipped Topping' }).click();
+    }
+    async addOreoCrumble(){
+        await this.toppings.click();
+        await this.page.getByRole('main').getByRole('button', { name: 'Increment Oreo Crumble' }).click();
+    }
+
+    async setQuantityTo(count) {
+        await this.selectQuantity.click();
+        const incrementBtn = this.page.getByRole('main').getByRole('button', { name: 'Increment Brewed Coffee' });
+        for (let i = 1; i < count; i++) {
+            await incrementBtn.click();
+        }
+    }
+
+    async addToOrder() {
+        await this.page.getByRole('main').getByRole('button', { name: /Add.*Brewed Coffee to order/ }).click();
+    }
+
+
 
 
 
