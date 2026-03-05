@@ -4,8 +4,7 @@ export class MenuItems {
 
     constructor(page) {
         this.page = page;
-        //this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
-        this.hotDrinksTile = page.locator("//a[normalize-space()='Hot Drinks']");
+        this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
         this.coldDrinksTile = page.getByRole('link', { name: /Cold Drinks/i });
         this.newandSeasonalTile = page.getByRole('link', { name: /New & Seasonal/i });
 
@@ -18,9 +17,8 @@ export class MenuItems {
     }
 
     async clickHotDrinks() {
-        await expect(this.hotDrinksTile).toBeVisible();
+        await expect(this.hotDrinksTile).toBeVisible({ timeout: 15000 });
         await this.hotDrinksTile.click();
-
     }
 
     async clickColdDrinks() {

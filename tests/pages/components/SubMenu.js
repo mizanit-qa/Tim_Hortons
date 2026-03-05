@@ -2,8 +2,7 @@ export class Submenu {
 
     constructor(page) {
         this.page = page;
-        this.brewedCoffeeTile = page.getByRole('link', { name: /Brewed Coffee/i });
-
+        this.brewedCoffeeTile = page.getByRole('link', { name: /Brewed Coffee/i }).first();
     }
 
     async clickBrewedCoffee() {

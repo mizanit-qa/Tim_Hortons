@@ -15,7 +15,10 @@ exports.HomePage = class HomePage{
     }
 
     async homepageMenu(){
-        await this.menuLink.click();
+        await Promise.all([
+            this.page.waitForURL(/\/menu/i, { timeout: 15000 }),
+            this.menuLink.click()
+        ]);
     }
 
     async timsforGood(){
