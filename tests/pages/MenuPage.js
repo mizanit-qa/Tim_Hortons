@@ -1,27 +1,22 @@
 import { expect } from '@playwright/test';
-import type { Page, Locator } from '@playwright/test';
 
 export class MenuPage {
-  readonly page: Page;
-  readonly menuGrid: Locator;
-  readonly menuTiles: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.menuGrid = page.getByTestId('menu-tile-grid');
     this.menuTiles = this.menuGrid.locator('a');
   }
 
-  async waitForLoaded(): Promise<void> {
+  async waitForLoaded() {
     await expect(this.menuGrid).toBeVisible({ timeout: 15000 });
   }
 
-  async getMenuTileNames(): Promise<string[]> {
+  async getMenuTileNames() {
     await this.waitForLoaded();
     return await this.menuTiles.allTextContents();
   }
 
-  async clickTile(name: string | RegExp): Promise<void> {
+  async clickTile(name) {
     await this.waitForLoaded();
     await this.menuGrid.getByRole('link', { name }).click();
   }

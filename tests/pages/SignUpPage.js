@@ -1,20 +1,5 @@
-import type { Page, Locator } from '@playwright/test';
-
 export class SignUpPage {
-  readonly page: Page;
-  readonly joinNowTab: Locator;
-  readonly firstNameInput: Locator;
-  readonly signupEmailInput: Locator;
-  readonly signupOptionalInfoLink: Locator;
-  readonly signupYear: Locator;
-  readonly signupMonth: Locator;
-  readonly signupDay: Locator;
-  readonly checkboxEmailReceive: Locator;
-  readonly checkboxAgreed: Locator;
-  readonly createAccountBtn: Locator;
-  readonly helpCentreLink: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.joinNowTab = page.getByTestId('join-now-tab');
     this.firstNameInput = page.getByTestId('signup-name-input');
@@ -29,14 +14,14 @@ export class SignUpPage {
     this.helpCentreLink = page.getByRole('link', { name: 'Help Centre' });
   }
 
-  async helpCentre(): Promise<void> {
+  async helpCentre() {
     await this.helpCentreLink.click();
     await this.page.waitForLoadState('domcontentloaded');
     await this.page.goBack();
     await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async signupShort(firstname: string, email: string): Promise<void> {
+  async signupShort(firstname, email) {
     await this.joinNowTab.click();
     await this.firstNameInput.fill(firstname);
     await this.signupEmailInput.fill(email);
@@ -44,7 +29,7 @@ export class SignUpPage {
     await this.createAccountBtn.click();
   }
 
-  async signupOptionInfo(firstname: string, email: string): Promise<void> {
+  async signupOptionInfo(firstname, email) {
     await this.joinNowTab.click();
     await this.firstNameInput.fill(firstname);
     await this.signupEmailInput.fill(email);

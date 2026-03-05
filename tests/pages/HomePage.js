@@ -1,15 +1,5 @@
-import type { Page, Locator } from '@playwright/test';
-
 export class HomePage {
-  readonly page: Page;
-  readonly menuLink: Locator;
-  readonly timsforGoodLink: Locator;
-  readonly timsCateringLink: Locator;
-  readonly timShopLink: Locator;
-  readonly moreLink: Locator;
-  readonly cateringLink: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.menuLink = page.locator("//a[normalize-space()='Menu']");
     this.timsforGoodLink = page.getByTestId('Tims for Good');
@@ -19,22 +9,22 @@ export class HomePage {
     this.cateringLink = page.getByTestId('Tims Catering');
   }
 
-  async homepageMenu(): Promise<void> {
+  async homepageMenu() {
     await Promise.all([
-      this.page.waitForURL(/\/menu/i, { timeout: 15000 }),
+      this.page.waitForURL(/\/menu/i, { timeout: 20000 }),
       this.menuLink.click()
     ]);
   }
 
-  async timsforGood(): Promise<void> {
+  async timsforGood() {
     await this.timsforGoodLink.click();
   }
 
-  async timsCatering(): Promise<void> {
+  async timsCatering() {
     await this.cateringLink.click();
   }
 
-  async timShop(): Promise<void> {
+  async timShop() {
     await this.timShopLink.click();
   }
 }

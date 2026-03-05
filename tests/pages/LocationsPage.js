@@ -1,14 +1,5 @@
-import type { Page, Locator } from '@playwright/test';
-
 export class LocationsPage {
-  readonly page: Page;
-  readonly pickUpButton: Locator;
-  readonly yourAddress: Locator;
-  readonly storeAccordionBtn: Locator;
-  readonly firstSuggestion: Locator;
-  readonly storeOrderBtn: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.pickUpButton = page.getByRole('button', { name: /Choose a Location|Pick Up/i });
     this.yourAddress = page.getByTestId("storelocator-autocomplete");
@@ -17,7 +8,7 @@ export class LocationsPage {
     this.storeOrderBtn = page.getByRole('button', { name: /^Order$/i });
   }
 
-  async storeSelection(): Promise<void> {
+  async storeSelection() {
     await this.pickUpButton.click();
     await this.yourAddress.waitFor({ state: 'visible', timeout: 15000 });
     await this.yourAddress.fill("1500 Woodbine Ave");

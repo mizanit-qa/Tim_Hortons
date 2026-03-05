@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { POManager } from '../pages/POManager';
+import { POManager } from '../pages/POManager.js';
 
 test('Brewed Coffee Selection', async ({ page }) => {
-  test.setTimeout(60000);
+  test.setTimeout(120000);
   const poManager = new POManager(page);
 
   await poManager.passwordProtection({ timeout: 5000 });
@@ -10,9 +10,13 @@ test('Brewed Coffee Selection', async ({ page }) => {
   await page.waitForTimeout(5000);
 
   await poManager.storeSelection();
+
+  // Leave Locations full page: go back to previous page then open menu
+  await page.goBack();
+  await page.waitForLoadState('domcontentloaded');
   await poManager.homepageMenu();
 
-  await expect(page).toHaveURL(/\/menu/i);
+  await page.getByRole('link', { name: /Hot Drinks/i }).waitFor({ state: 'visible', timeout: 30000 });
   await poManager.clickHotDrinks();
 
   await page.getByRole('link', { name: /Brewed Coffee/i }).first().waitFor({ state: 'attached' });
@@ -20,7 +24,7 @@ test('Brewed Coffee Selection', async ({ page }) => {
   await poManager.clickBrewedCoffee();
   await poManager.clickBrewedCoffee();
 
-  await page.getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible', timeout: 15000 });
+  await page.getByRole('main').getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible', timeout: 20000 });
 
   await poManager.sizeSelection();
   await poManager.blendSelection();

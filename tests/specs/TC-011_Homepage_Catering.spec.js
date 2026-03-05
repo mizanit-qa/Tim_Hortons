@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { ProtectedPage } from '../pages/ProtectedPage';
-import { SignInPage } from '../pages/SignInPage';
-import { HomePage } from '../pages/HomePage';
-import { CateringPage } from '../pages/CateringPage';
+import { ProtectedPage } from '../pages/ProtectedPage.js';
+import { SignInPage } from '../pages/SignInPage.js';
+import { HomePage } from '../pages/HomePage.js';
+import { CateringPage } from '../pages/CateringPage.js';
 
 test('Homepage - Catering', async ({ page }) => {
   const sitepass = new ProtectedPage(page);

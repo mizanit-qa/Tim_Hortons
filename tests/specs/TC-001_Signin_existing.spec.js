@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import { SignInPage } from '../pages/SignInPage';
-import { ProtectedPage } from '../pages/ProtectedPage';
+import { SignInPage } from '../pages/SignInPage.js';
+import { ProtectedPage } from '../pages/ProtectedPage.js';
 
 test('Existing User Sign In', async ({ page }) => {
   const sitepass = new ProtectedPage(page);

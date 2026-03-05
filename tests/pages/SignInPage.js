@@ -1,19 +1,7 @@
 import { expect } from '@playwright/test';
-import type { Page, Locator } from '@playwright/test';
 
 export class SignInPage {
-  readonly page: Page;
-  readonly SignInBtnLanding: Locator;
-  readonly LanguageSelector: Locator;
-  readonly CALanguageRadioBtn: Locator;
-  readonly ApplyBtn: Locator;
-  readonly UserEmail: Locator;
-  readonly SignInBtn: Locator;
-  readonly ValidationCode: Locator;
-  readonly SendNewCode: Locator;
-  readonly ResendOtpCode: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.SignInBtnLanding = page.getByRole("button", { name: /^Sign In$/ });
     this.LanguageSelector = page.getByRole("button", { name: /Language and region selector/i });
@@ -28,11 +16,11 @@ export class SignInPage {
     this.ResendOtpCode = page.getByRole('button', { name: 'Resend Code' });
   }
 
-  async gotoHome(): Promise<void> {
+  async gotoHome() {
     await this.page.goto("https://staging-th-web.ca.rbi.tools/", { waitUntil: "domcontentloaded" });
   }
 
-  async userSignIn(email: string, code = "123456"): Promise<void> {
+  async userSignIn(email, code = "123456") {
     await this.SignInBtnLanding.click();
     if (await this.LanguageSelector.isVisible().catch(() => false)) {
       await this.LanguageSelector.click();
@@ -47,7 +35,7 @@ export class SignInPage {
     await this.ValidationCode.fill(code);
   }
 
-  async nonExistingUserSignIn(email: string): Promise<void> {
+  async nonExistingUserSignIn(email) {
     await this.SignInBtnLanding.click();
     if (await this.LanguageSelector.isVisible().catch(() => false)) {
       await this.LanguageSelector.click();
@@ -61,7 +49,7 @@ export class SignInPage {
     await this.SignInBtn.click();
   }
 
-  async userSignInBadCode(email: string, code = "000000"): Promise<void> {
+  async userSignInBadCode(email, code = "000000") {
     await this.SignInBtnLanding.click();
     if (await this.LanguageSelector.isVisible().catch(() => false)) {
       await this.LanguageSelector.click();
@@ -76,11 +64,11 @@ export class SignInPage {
     await this.ValidationCode.fill(code);
   }
 
-  async sendNewOtp(): Promise<void> {
+  async sendNewOtp() {
     await this.SendNewCode.click();
   }
 
-  async resendCode(): Promise<void> {
+  async resendCode() {
     await this.ResendOtpCode.click();
   }
 }

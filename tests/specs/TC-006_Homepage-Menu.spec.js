@@ -2,13 +2,13 @@ import { test } from '@playwright/test';
 import fs from 'fs/promises';
 import path from 'path';
 
-import { ProtectedPage } from '../pages/ProtectedPage';
-import { SignInPage } from '../pages/SignInPage';
-import { HomePage } from '../pages/HomePage';
-import { LocationsPage } from '../pages/LocationsPage';
-import { MenuPage } from '../pages/MenuPage';
+import { ProtectedPage } from '../pages/ProtectedPage.js';
+import { SignInPage } from '../pages/SignInPage.js';
+import { HomePage } from '../pages/HomePage.js';
+import { LocationsPage } from '../pages/LocationsPage.js';
+import { MenuPage } from '../pages/MenuPage.js';
 
-import { sortNormalize, difference } from '../utils/compareLists';
+import { sortNormalize, difference } from '../utils/compareLists.js';
 
 test('Homepage - Menu', async ({ page }) => {
   const sitepass = new ProtectedPage(page);
@@ -27,7 +27,7 @@ test('Homepage - Menu', async ({ page }) => {
   const actual = await menuPage.getMenuTileNames();
 
   const expectedPath = path.join(__dirname, 'data', 'menu_expected.json');
-  const expected = JSON.parse(await fs.readFile(expectedPath, 'utf8')) as string[];
+  const expected = JSON.parse(await fs.readFile(expectedPath, 'utf8'));
 
   const actualSorted = sortNormalize(actual);
   const expectedSorted = sortNormalize(expected);

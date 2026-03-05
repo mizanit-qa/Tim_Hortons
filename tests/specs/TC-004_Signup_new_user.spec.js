@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
-import { SignUpPage } from '../pages/SignUpPage';
-import { ProtectedPage } from '../pages/ProtectedPage';
-import { makeEmail } from '../utils/data';
+import { SignUpPage } from '../pages/SignUpPage.js';
+import { ProtectedPage } from '../pages/ProtectedPage.js';
+import { makeEmail } from '../utils/data.js';
 
 test('New User Signup - short', async ({ page }) => {
   const sitepass = new ProtectedPage(page);

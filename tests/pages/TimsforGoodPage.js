@@ -1,16 +1,12 @@
 import { expect } from '@playwright/test';
-import type { Page, Locator } from '@playwright/test';
 
 export class TimsforGoodPage {
-  readonly page: Page;
-  readonly pageHeading: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.pageHeading = page.getByRole('heading', { name: /Tims for Good/i });
   }
 
-  async expectPageHeading(): Promise<void> {
+  async expectPageHeading() {
     await expect(this.pageHeading).toBeVisible();
   }
 }

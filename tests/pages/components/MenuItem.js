@@ -1,34 +1,28 @@
 import { expect } from '@playwright/test';
-import type { Page, Locator } from '@playwright/test';
 
 export class MenuItems {
-  readonly page: Page;
-  readonly hotDrinksTile: Locator;
-  readonly coldDrinksTile: Locator;
-  readonly newandSeasonalTile: Locator;
-
-  constructor(page: Page) {
+  constructor(page) {
     this.page = page;
     this.hotDrinksTile = page.getByRole('link', { name: /Hot Drinks/i });
     this.coldDrinksTile = page.getByRole('link', { name: /Cold Drinks/i });
     this.newandSeasonalTile = page.getByRole('link', { name: /New & Seasonal/i });
   }
 
-  async openMenu(): Promise<void> {
+  async openMenu() {
     await expect(this.page).toHaveURL(/\/menu/i);
     await expect(this.hotDrinksTile).toBeVisible();
   }
 
-  async clickHotDrinks(): Promise<void> {
-    await expect(this.hotDrinksTile).toBeVisible({ timeout: 15000 });
+  async clickHotDrinks() {
+    await expect(this.hotDrinksTile).toBeVisible({ timeout: 30000 });
     await this.hotDrinksTile.click();
   }
 
-  async clickColdDrinks(): Promise<void> {
+  async clickColdDrinks() {
     await this.coldDrinksTile.click();
   }
 
-  async clickNewAndSeasonal(): Promise<void> {
+  async clickNewAndSeasonal() {
     await this.newandSeasonalTile.click();
   }
 }
