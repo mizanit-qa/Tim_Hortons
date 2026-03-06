@@ -3,6 +3,7 @@ import { SignInPage } from './SignInPage.js';
 import { MenuItems } from './components/MenuItem.js';
 import { LocationsPage } from './LocationsPage.js';
 import { HomePage } from './HomePage.js';
+import { MenuPage } from './MenuPage.js';
 import { Submenu } from './components/SubMenu.js';
 import { NestedSubMenu } from './components/NestedSubMenu.js';
 import { BrewedCoffee } from './components/BrewedCoffee.js';
@@ -15,6 +16,7 @@ export class POManager {
     this.menuItems = new MenuItems(page);
     this.locationsPage = new LocationsPage(page);
     this.homepage = new HomePage(page);
+    this.menuPage = new MenuPage(page);
     this.submenu = new Submenu(page);
     this.nestedsubmenu = new NestedSubMenu(page);
     this.brewedCoffee = new BrewedCoffee(page);
@@ -98,5 +100,9 @@ export class POManager {
 
   async openMenuItems() {
     await this.menuItems.clickHotDrinks();
+  }
+  
+  async clickCartAndCheckout() {
+    await this.menuPage.clickCartAndCheckout();
   }
 }

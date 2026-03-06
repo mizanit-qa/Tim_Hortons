@@ -40,5 +40,6 @@ test('Brewed Coffee Selection', async ({ page }) => {
   await poManager.addWhippedTopping();
   await poManager.setQuantityTo(3);
   await poManager.addToOrder();
+  await poManager.clickCartAndCheckout();
   await page.waitForTimeout(10000);
 });

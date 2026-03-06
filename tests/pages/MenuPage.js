@@ -5,6 +5,7 @@ export class MenuPage {
     this.page = page;
     this.menuGrid = page.getByTestId('menu-tile-grid');
     this.menuTiles = this.menuGrid.locator('a');
+    this.cartButton = page.getByTestId('cart-button-desktop');
   }
 
   async waitForLoaded() {
@@ -19,5 +20,10 @@ export class MenuPage {
   async clickTile(name) {
     await this.waitForLoaded();
     await this.menuGrid.getByRole('link', { name }).click();
+  }
+
+  async clickCartAndCheckout() {
+    await this.cartButton.click();
+    await this.page.getByRole('button', { name: 'Checkout' }).click();
   }
 }
