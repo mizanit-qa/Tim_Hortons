@@ -1,20 +1,8 @@
-import { test, expect } from '@playwright/test';
-import { ProtectedPage } from '../pages/ProtectedPage.js';
-import { SignInPage } from '../pages/SignInPage.js';
-import { HomePage } from '../pages/HomePage.js';
-import { TimsforGoodPage } from '../pages/TimsforGoodPage.js';
+import { test, expect } from '../fixtures/baseTest.js';
 
-test('Homepage - Tims for Good', async ({ page }) => {
-  const sitepass = new ProtectedPage(page);
-  const signin = new SignInPage(page);
-  const homepage = new HomePage(page);
-  const timsforGoodPage = new TimsforGoodPage(page);
-
-  await sitepass.passwordProtection({ timeout: 5000 });
-  await signin.userSignIn('timregression+95@gmail.com');
-
-  await page.waitForTimeout(5000);
-  await homepage.timsforGood();
+test('Homepage - Tims for Good', async ({ page, app }) => {
+  await app.signInExisting();
+  await app.homePage.timsforGood();
 
   await expect(page).toHaveURL(/tims-for-good/i, { timeout: 15000 });
 

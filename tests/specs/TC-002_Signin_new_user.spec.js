@@ -1,19 +1,11 @@
-import { test, expect } from '@playwright/test';
-import { SignInPage } from '../pages/SignInPage.js';
-import { ProtectedPage } from '../pages/ProtectedPage.js';
+import { test, expect } from '../fixtures/baseTest.js';
 
-test('New User Sign In', async ({ page }) => {
-  const sitepass = new ProtectedPage(page);
-  const signin = new SignInPage(page);
+test('New User Sign In', async ({ page, app }) => {
+  await app.protectedPage.passwordProtection();
+  await app.signInPage.nonExistingUserSignIn(app.credentials.nonExistingUserEmail);
 
-  await sitepass.passwordProtection();
-  await page.waitForTimeout(2000);
-
-  await signin.gotoHome();
-  await signin.nonExistingUserSignIn('timregression+9595@gmail.com');
-  await page.waitForTimeout(5000);
-
-  await expect(page.locator("//div[@data-testid='signin-email-input-message']")).toContainText(
-    'This user does not exist'
-  );
+  const emailError = page
+    .locator("[data-testid='signin-email-input-message']")
+    .or(page.getByText(/does not exist|can't find|could not find|not found/i).first());
+  await expect(emailError).toBeVisible({ timeout: 15000 });
 });

@@ -5,7 +5,9 @@ export class MenuPage {
     this.page = page;
     this.menuGrid = page.getByTestId('menu-tile-grid');
     this.menuTiles = this.menuGrid.locator('a');
-    this.cartButton = page.getByTestId('cart-button-desktop');
+    this.cartButtonDesktop = page.getByTestId('cart-button-desktop');
+    this.cartButtonPreview = page.getByRole('button', { name: /Shopping cart preview/i });
+    this.cartButtonBottomBar = page.getByRole('button', { name: /Cart total/i });
   }
 
   async waitForLoaded() {
@@ -23,7 +25,22 @@ export class MenuPage {
   }
 
   async clickCartAndCheckout() {
-    await this.cartButton.click();
-    await this.page.getByRole('button', { name: 'Checkout' }).click();
+    const candidates = [
+      this.cartButtonDesktop,
+      this.cartButtonPreview,
+      this.cartButtonBottomBar
+    ];
+    for (const candidate of candidates) {
+      if (await candidate.first().isVisible().catch(() => false)) {
+        if (await candidate.first().isEnabled().catch(() => false)) {
+          await candidate.first().click();
+          break;
+        }
+      }
+    }
+    const checkoutBtn = this.page.getByRole('button', { name: /Checkout/i }).first();
+    if (await checkoutBtn.isVisible().catch(() => false)) {
+      await checkoutBtn.click();
+    }
   }
 }

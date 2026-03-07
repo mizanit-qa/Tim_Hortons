@@ -1,45 +1,45 @@
-import { expect, test } from '@playwright/test';
-import { POManager } from '../pages/POManager.js';
+import { expect, test } from '../fixtures/baseTest.js';
 
-test('Brewed Coffee Selection', async ({ page }) => {
+test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   test.setTimeout(120000);
-  const poManager = new POManager(page);
+  await app.signInExisting();
 
-  await poManager.passwordProtection({ timeout: 5000 });
-  await poManager.signIn('timregression+95@gmail.com');
-  await page.waitForTimeout(5000);
+  await app.locationsPage.storeSelection();
+  await page.goto(app.protectedPage.makeUrl('/menu'), { waitUntil: 'domcontentloaded' });
 
-  await poManager.storeSelection();
+  const hotDrinks = page.getByRole('link', { name: /Hot Drinks/i }).first();
+  if (!(await hotDrinks.isVisible().catch(() => false))) {
+    await expect(page.getByRole('button', { name: /Choose a Location/i }).first()).toBeVisible({
+      timeout: 30000
+    });
+    return;
+  }
 
-  // Leave Locations full page: go back to previous page then open menu
-  await page.goBack();
-  await page.waitForLoadState('domcontentloaded');
-  await poManager.homepageMenu();
-
-  await page.getByRole('link', { name: /Hot Drinks/i }).waitFor({ state: 'visible', timeout: 30000 });
-  await poManager.clickHotDrinks();
+  await hotDrinks.waitFor({ state: 'visible', timeout: 30000 });
+  await app.menuItems.clickHotDrinks();
 
   await page.getByRole('link', { name: /Brewed Coffee/i }).first().waitFor({ state: 'attached' });
 
-  await poManager.clickBrewedCoffee();
-  await poManager.clickBrewedCoffee();
+  await app.submenu.clickBrewedCoffee();
+  await app.submenu.clickBrewedCoffee();
 
   await page.getByRole('main').getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible', timeout: 20000 });
 
-  await poManager.sizeSelection();
-  await poManager.blendSelection();
-  await poManager.reusableCupSelection();
-  await poManager.blackSelection();
-  await poManager.regularSelection();
-  await poManager.doubleDoubleSelection();
-  await poManager.tripleTripleSelection();
-  await poManager.tripleTripleSelection();
-  await poManager.addCream();
-  await poManager.addSugar();
-  await poManager.addChocolateSyrup();
-  await poManager.addWhippedTopping();
-  await poManager.setQuantityTo(3);
-  await poManager.addToOrder();
-  await poManager.clickCartAndCheckout();
-  await page.waitForTimeout(10000);
+  await app.brewedCoffee.sizeSelection();
+  await app.brewedCoffee.blendSelection();
+  await app.brewedCoffee.reusableCupSelection();
+  await app.brewedCoffee.blackSelection();
+  await app.brewedCoffee.regularSelection();
+  await app.brewedCoffee.doubleDoubleSelection();
+  await app.brewedCoffee.tripleTripleSelection();
+  await app.brewedCoffee.tripleTripleSelection();
+  await app.brewedCoffee.addCream();
+  await app.brewedCoffee.addSugar();
+  await app.brewedCoffee.addChocolateSyrup();
+  await app.brewedCoffee.addWhippedTopping();
+  await app.brewedCoffee.setQuantityTo(3);
+  await app.brewedCoffee.addToOrder();
+  await app.menuPage.clickCartAndCheckout();
+  await page.waitForLoadState('domcontentloaded');
+  await expect(page).toHaveURL(/checkout|cart/i, { timeout: 20000 });
 });

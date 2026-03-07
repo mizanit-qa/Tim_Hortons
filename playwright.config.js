@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import { loadEnvFile } from './tests/utils/loadEnv.js';
+
+loadEnvFile();
 
 /**
  * @see https://playwright.dev/docs/test-configuration

@@ -1,17 +1,11 @@
-import { test } from '@playwright/test';
-import { SignUpPage } from '../pages/SignUpPage.js';
-import { ProtectedPage } from '../pages/ProtectedPage.js';
+import { test } from '../fixtures/baseTest.js';
 import { makeEmail } from '../utils/data.js';
 
-test('New User Signup - with optional info', async ({ page }) => {
-  const sitepass = new ProtectedPage(page);
-  const signup = new SignUpPage(page);
+test('New User Signup - with optional info', async ({ app }) => {
+  await app.openSignupProtected();
 
-  await sitepass.passwordProtectionSignup();
-  await page.waitForTimeout(2000);
-
-  await signup.helpCentre();
+  await app.signUpPage.helpCentre();
 
   const email = makeEmail();
-  await signup.signupOptionInfo('Tim', email);
+  await app.signUpPage.signupOptionInfo('Tim', email);
 });
