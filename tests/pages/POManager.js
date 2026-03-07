@@ -1,12 +1,12 @@
 import { ProtectedPage } from './ProtectedPage.js';
 import { SignInPage } from './SignInPage.js';
-import { MenuItems } from './components/MenuItem.js';
+import { MenuItems } from '../components/MenuItem.js';
 import { LocationsPage } from './LocationsPage.js';
 import { HomePage } from './HomePage.js';
 import { MenuPage } from './MenuPage.js';
-import { Submenu } from './components/SubMenu.js';
-import { NestedSubMenu } from './components/NestedSubMenu.js';
-import { BrewedCoffee } from './components/BrewedCoffee.js';
+import { Submenu } from '../components/SubMenu.js';
+import { NestedSubMenu } from '../components/NestedSubMenu.js';
+import { BrewedCoffee } from '../components/BrewedCoffee.js';
 
 export class POManager {
   constructor(page) {
