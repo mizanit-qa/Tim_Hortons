@@ -4,7 +4,7 @@ export class ProtectedPage {
     this.baseUrl = process.env.BASE_URL ?? 'https://staging-th-web.ca.rbi.tools/';
     this.sitePasswordValue = process.env.SITE_PASSWORD ?? 'rbi-tech';
     this.Card = ".card";
-    this.SitePasswor = "input[placeholder='Password']";
+    this.SitePassword = "input[placeholder='Password']";
     this.SubmitBtn = ".button";
     this.CookiesClose = "button[aria-label='Close']";
     this.LanguageApplyBtn = ".Button__BaseButton-sc-cbhjo9-0.bQGVPR";
@@ -26,7 +26,7 @@ export class ProtectedPage {
 
   async openProtected(path = '/') {
     await this.page.goto(this.makeUrl(path), { waitUntil: 'domcontentloaded' });
-    await this.page.locator(this.SitePasswor).fill(this.sitePasswordValue);
+    await this.page.locator(this.SitePassword).fill(this.sitePasswordValue);
     await this.page.locator(this.SubmitBtn).click();
     await this.dismissLandingOverlays();
   }
