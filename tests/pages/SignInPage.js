@@ -47,6 +47,7 @@ export class SignInPage {
 
   async userSignIn(email, code = this.defaultOtpCode) {
     await this.enterEmailAndContinue(email);
+    await this.ValidationCode.waitFor({ state: 'visible', timeout: 30000 });
     await this.ValidationCode.fill(code);
   }
 
@@ -56,6 +57,7 @@ export class SignInPage {
 
   async userSignInBadCode(email, code = this.defaultBadOtpCode) {
     await this.enterEmailAndContinue(email);
+    await this.ValidationCode.waitFor({ state: 'visible', timeout: 30000 });
     await this.ValidationCode.fill(code);
   }
 
