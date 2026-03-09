@@ -12,27 +12,10 @@ export class LocationsPage {
   }
 
   async storeSelection() {
-    if (await this.selectedStoreChip.first().isVisible().catch(() => false)) {
-      return;
-    }
     await this.pickUpButton.first().click();
-    if (!(await this.yourAddress.isVisible().catch(() => false))) {
-      await this.yourAddress.waitFor({ state: 'visible', timeout: 8000 }).catch(() => {});
-    }
-    if (!(await this.yourAddress.isVisible().catch(() => false))) {
-      return;
-    }
     await this.yourAddress.fill("1500 Woodbine Ave");
-    if (await this.firstSuggestion.isVisible().catch(() => false)) {
-      await this.firstSuggestion.click();
-    } else {
-      await this.yourAddress.press('Enter');
-    }
-    if (await this.storeAccordionBtn.isVisible().catch(() => false)) {
-      await this.storeAccordionBtn.click();
-    }
-    if (await this.storeOrderBtn.first().isVisible().catch(() => false)) {
-      await this.storeOrderBtn.first().click();
-    }
+    await this.firstSuggestion.click();
+    await this.storeAccordionBtn.click();
+    await this.storeOrderBtn.first().click();
   }
 }
