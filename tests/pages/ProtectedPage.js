@@ -68,4 +68,4 @@ export class ProtectedPage {
       10000
     );
   }
-}
+};
