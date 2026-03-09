@@ -10,6 +10,7 @@ import { MenuItems } from '../components/MenuItem.js';
 import { Submenu } from '../components/SubMenu.js';
 import { BrewedCoffee } from '../components/BrewedCoffee.js';
 import { loadEnvFile } from '../utils/loadEnv.js';
+import { CheckoutPage } from '../pages/CheckoutPage.js';
 
 loadEnvFile();
 
@@ -53,6 +54,9 @@ export const test = base.extend({
         badOtpCode: DEFAULT_BAD_OTP,
         nonExistingUserEmail: DEFAULT_NON_EXISTING_USER
       },
+      checkoutPage: new CheckoutPage(page),
+
+      
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
         await app.protectedPage.passwordProtection();
         await app.signInPage.userSignIn(email, code);
