@@ -5,6 +5,7 @@ test('Homepage - Menu', async ({ page, app }) => {
   await app.locationsPage.storeSelection();
   await page.goto(app.protectedPage.makeUrl('/menu'), { waitUntil: 'domcontentloaded' });
 
+  // After store selection we're either on the menu (assert categories) or still on location picker (assert Choose a Location).
   const hotDrinks = page.getByRole('link', { name: /Hot Drinks/i }).first();
   if (await hotDrinks.isVisible().catch(() => false)) {
     await expect(hotDrinks).toBeVisible({ timeout: 20000 });

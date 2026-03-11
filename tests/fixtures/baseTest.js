@@ -14,6 +14,38 @@ import { CheckoutPage } from '../pages/CheckoutPage.js';
 
 loadEnvFile();
 
+/**
+ * @typedef {import('../pages/ProtectedPage.js').ProtectedPage} ProtectedPage
+ * @typedef {import('../pages/SignInPage.js').SignInPage} SignInPage
+ * @typedef {import('../pages/HomePage.js').HomePage} HomePage
+ * @typedef {import('../pages/LocationsPage.js').LocationsPage} LocationsPage
+ * @typedef {import('../pages/MenuPage.js').MenuPage} MenuPage
+ * @typedef {import('../pages/SignUpPage.js').SignUpPage} SignUpPage
+ * @typedef {import('../pages/RewardsPage.js').RewardsPage} RewardsPage
+ * @typedef {import('../components/MenuItem.js').MenuItems} MenuItems
+ * @typedef {import('../components/SubMenu.js').Submenu} Submenu
+ * @typedef {import('../components/BrewedCoffee.js').BrewedCoffee} BrewedCoffee
+ * @typedef {import('@playwright/test').Page} Page
+ *
+ * @typedef {{
+ *   page: Page;
+ *   protectedPage: ProtectedPage;
+ *   signInPage: SignInPage;
+ *   homePage: HomePage;
+ *   locationsPage: LocationsPage;
+ *   menuPage: MenuPage;
+ *   signUpPage: SignUpPage;
+ *   rewardsPage: RewardsPage;
+ *   menuItems: MenuItems;
+ *   submenu: Submenu;
+ *   brewedCoffee: BrewedCoffee;
+ *   credentials: { existingUserEmail: string; otpCode: string; badOtpCode: string; nonExistingUserEmail: string };
+ *   checkoutPage: CheckoutPage;
+ *   signInExisting(email?: string, code?: string): Promise<void>;
+ *   openSignupProtected(): Promise<void>;
+ * }} AppFixture
+ */
+
 function parseCsv(value) {
   if (!value) return [];
   return value
@@ -68,7 +100,6 @@ export const test = base.extend({
         nonExistingUserEmail: DEFAULT_NON_EXISTING_USER
       },
       checkoutPage: new CheckoutPage(page),
-
 
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
         await app.protectedPage.passwordProtection();

@@ -1,5 +1,5 @@
-import { test } from '@playwright/test';
+import { test } from '../fixtures/baseTest.js';
 
-test('Menu and submenu', async ({ page }) => {
-  // TODO: add steps
+test.skip('Menu and submenu', async ({ page, app }) => {
+  // TODO: add steps - use app.signInExisting(), app.menuPage, app.submenu, etc.
 });

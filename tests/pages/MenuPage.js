@@ -42,5 +42,6 @@ export class MenuPage {
     if (await checkoutBtn.isVisible().catch(() => false)) {
       await checkoutBtn.click();
     }
+    await expect(this.page).toHaveURL(/checkout|cart/i, { timeout: 20000 });
   }
 }
