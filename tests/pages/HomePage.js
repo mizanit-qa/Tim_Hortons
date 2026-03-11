@@ -13,7 +13,10 @@ export class HomePage {
       .or(page.getByRole('link', { name: /TimShop|Tim Shop/i }));
     this.moreLink = page.getByTestId('More');
     this.cateringLink = this.timsCateringLink;
-    this.baseUrl = process.env.BASE_URL ?? 'https://staging-th-web.ca.rbi.tools/';
+    this.baseUrl = process.env.BASE_URL;
+    if (!this.baseUrl) {
+      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
+    }
   }
 
   async homepageMenu() {

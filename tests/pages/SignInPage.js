@@ -3,9 +3,18 @@ import { expect } from '@playwright/test';
 export class SignInPage {
   constructor(page) {
     this.page = page;
-    this.baseUrl = process.env.BASE_URL ?? 'https://staging-th-web.ca.rbi.tools/';
-    this.defaultOtpCode = process.env.TEST_OTP ?? '123456';
-    this.defaultBadOtpCode = process.env.TEST_BAD_OTP ?? '000000';
+    this.baseUrl = process.env.BASE_URL;
+    this.defaultOtpCode = process.env.TEST_OTP;
+    this.defaultBadOtpCode = process.env.TEST_BAD_OTP;
+    if (!this.baseUrl) {
+      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
+    }
+    if (!this.defaultOtpCode) {
+      throw new Error('TEST_OTP is required. Set it in .env (see .env.example).');
+    }
+    if (!this.defaultBadOtpCode) {
+      throw new Error('TEST_BAD_OTP is required. Set it in .env (see .env.example).');
+    }
     this.SignInBtnLanding = page
       .getByRole('button', { name: /^Sign In$/ })
       .or(page.getByRole('link', { name: /^Sign In$/ }))

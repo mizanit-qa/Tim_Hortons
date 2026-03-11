@@ -1,8 +1,14 @@
 export class ProtectedPage {
   constructor(page) {
     this.page = page;
-    this.baseUrl = this.readEnv('BASE_URL', 'https://staging-th-web.ca.rbi.tools/');
-    this.sitePasswordValue = this.readEnv('SITE_PASSWORD', 'rbi-tech');
+    this.baseUrl = this.readEnv('BASE_URL');
+    this.sitePasswordValue = this.readEnv('SITE_PASSWORD');
+    if (!this.baseUrl) {
+      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
+    }
+    if (!this.sitePasswordValue) {
+      throw new Error('SITE_PASSWORD is required. Set it in .env (see .env.example).');
+    }
     this.Card = ".card";
     this.SitePassword = "input[placeholder='Password']";
     this.SubmitBtn = ".button";

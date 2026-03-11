@@ -22,11 +22,24 @@ function parseCsv(value) {
     .filter(Boolean);
 }
 
-const DEFAULT_TEST_USER = process.env.TEST_USER_EMAIL ?? 'timregression+95@gmail.com';
+const DEFAULT_TEST_USER = process.env.TEST_USER_EMAIL;
 const DEFAULT_TEST_USERS = parseCsv(process.env.TEST_USER_EMAILS);
-const DEFAULT_TEST_OTP = process.env.TEST_OTP ?? '123456';
-const DEFAULT_BAD_OTP = process.env.TEST_BAD_OTP ?? '000000';
-const DEFAULT_NON_EXISTING_USER = process.env.NON_EXISTING_USER_EMAIL ?? 'timregression+9595@gmail.com';
+const DEFAULT_TEST_OTP = process.env.TEST_OTP;
+const DEFAULT_BAD_OTP = process.env.TEST_BAD_OTP;
+const DEFAULT_NON_EXISTING_USER = process.env.NON_EXISTING_USER_EMAIL;
+
+if (!DEFAULT_TEST_USER) {
+  throw new Error('TEST_USER_EMAIL is required. Set it in .env (see .env.example).');
+}
+if (!DEFAULT_TEST_OTP) {
+  throw new Error('TEST_OTP is required. Set it in .env (see .env.example).');
+}
+if (!DEFAULT_BAD_OTP) {
+  throw new Error('TEST_BAD_OTP is required. Set it in .env (see .env.example).');
+}
+if (!DEFAULT_NON_EXISTING_USER) {
+  throw new Error('NON_EXISTING_USER_EMAIL is required. Set it in .env (see .env.example).');
+}
 
 export const test = base.extend({
   app: async ({ page }, use, testInfo) => {
