@@ -20,7 +20,7 @@ export class HomePage {
   }
 
   async homepageMenu() {
-    await this.menuLink.click({ timeout: 15000 }).catch(() => {});
+    await this.menuLink.click({ timeout: 15000 }).catch(() => { });
     try {
       await this.page.waitForURL(/\/menu/i, { timeout: 8000 });
     } catch {

@@ -69,7 +69,7 @@ export const test = base.extend({
       },
       checkoutPage: new CheckoutPage(page),
 
-      
+
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
         await app.protectedPage.passwordProtection();
         await app.signInPage.userSignIn(email, code);
