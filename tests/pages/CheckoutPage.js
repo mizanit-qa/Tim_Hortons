@@ -66,7 +66,7 @@ export class CheckoutPage {
   }
 
   async turnOffRedeemPoints() {
-    await this.redeemPointsToggle.click();
+    await this.redeemPointsToggle.evaluate((el) => el.click());
   }
 
   async incrementQuantity() {

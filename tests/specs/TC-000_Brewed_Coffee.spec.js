@@ -29,6 +29,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.brewedCoffee.addWhippedTopping();
   await app.brewedCoffee.setQuantityTo(3);
   await app.brewedCoffee.addToOrder();
+  //Checkout Page
   await app.menuPage.clickCartAndCheckout();
   await page.waitForLoadState('domcontentloaded');
   await expect(page).toHaveURL(/checkout|cart/i, { timeout: 20000 });
@@ -36,15 +37,37 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.checkoutPage.selectCurbsidePickup();
   await app.checkoutPage.selectPickUp();
   await app.checkoutPage.selectDineIn();
+
+  await expect(page.getByRole('heading', { name: 'Dine In Order' })).toBeVisible({ timeout: 20000 });
+
+  const radioButton = page.getByTestId('rewards-management-toggle');
+  await expect(radioButton).toBeVisible({ timeout: 20000 });
   await app.checkoutPage.turnOffRedeemPoints();
+  await page.waitForTimeout(1000);
+  await expect(radioButton).not.toBeChecked({ timeout: 20000 });
+
   await app.checkoutPage.incrementQuantity();
   await app.checkoutPage.addToOrder();
   await app.checkoutPage.startPrepTime5Minutes();
   await app.checkoutPage.startPrepTime15Minutes();
   await app.checkoutPage.startPrepTime20Minutes();
   await app.checkoutPage.startPrepTimeNow();
+
+  await page.waitForTimeout(500);
+  const cartItem = page.getByTestId('cart-item').first();
+  await expect(cartItem).toContainText('Small Coffee Decaf - Reusable Cup');
+  await expect(cartItem).toContainText('1 3.5 Cream');
+  await expect(cartItem).toContainText('1 3.5 Sugar');
+  await expect(cartItem).toContainText('1 1 Chocolate Syrup');
+  await expect(cartItem).toContainText('1 1 Whipped Topping');
+
+  await expect(cartItem.getByText('Item Total')).toBeVisible();
+  await expect(cartItem).toContainText('$11.16');
+
   await app.checkoutPage.continueToPayment();
   await page.waitForLoadState('domcontentloaded');
+
+  //Order Payment Page
   await app.orderPaymentPage.selectVisaCard();
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
