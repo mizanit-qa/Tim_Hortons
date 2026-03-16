@@ -1,0 +1,9 @@
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"before click","data":{"checked":true,"disabled":false,"readOnly":false,"ariaPressed":"true","tagName":"INPUT"},"hypothesisId":"A","timestamp":1773693207530}
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"after click","data":{"checked":false,"disabled":false,"readOnly":false,"ariaPressed":"false"},"hypothesisId":"A","timestamp":1773693207611}
+{"sessionId":"494678","location":"TC-000_Brewed_Coffee.spec.js:after wait","message":"toggle state after 1s wait","data":{"checkedAfterWait":false},"hypothesisId":"C","timestamp":1773693208622}
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"before click","data":{"checked":false,"disabled":false,"readOnly":false,"ariaPressed":"false","tagName":"INPUT"},"hypothesisId":"A","timestamp":1773693263482}
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"after click","data":{"checked":true,"disabled":false,"readOnly":false,"ariaPressed":"true"},"hypothesisId":"A","timestamp":1773693263556}
+{"sessionId":"494678","location":"TC-000_Brewed_Coffee.spec.js:after wait","message":"toggle state after 1s wait","data":{"checkedAfterWait":true},"hypothesisId":"C","timestamp":1773693264577}
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"before click","data":{"checked":true,"disabled":false,"readOnly":false,"ariaPressed":"true","tagName":"INPUT"},"hypothesisId":"A","timestamp":1773693346267}
+{"sessionId":"494678","location":"CheckoutPage.js:turnOffRedeemPoints","message":"after click","data":{"checked":false,"disabled":false,"readOnly":false,"ariaPressed":"false"},"hypothesisId":"A","timestamp":1773693346310}
+{"sessionId":"494678","location":"TC-000_Brewed_Coffee.spec.js:after wait","message":"toggle state after 1s wait","data":{"checkedAfterWait":false},"hypothesisId":"C","timestamp":1773693347328}

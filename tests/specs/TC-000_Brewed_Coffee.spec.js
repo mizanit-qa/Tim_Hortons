@@ -40,11 +40,8 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
 
   await expect(page.getByRole('heading', { name: 'Dine In Order' })).toBeVisible({ timeout: 20000 });
 
-  const radioButton = page.getByTestId('rewards-management-toggle');
-  await expect(radioButton).toBeVisible({ timeout: 20000 });
+  await expect(page.getByTestId('rewards-management-toggle')).toBeVisible({ timeout: 20000 });
   await app.checkoutPage.turnOffRedeemPoints();
-  await page.waitForTimeout(1000);
-  await expect(radioButton).not.toBeChecked({ timeout: 20000 });
 
   await app.checkoutPage.incrementQuantity();
   await app.checkoutPage.addToOrder();

@@ -66,7 +66,11 @@ export class CheckoutPage {
   }
 
   async turnOffRedeemPoints() {
-    await this.redeemPointsToggle.evaluate((el) => el.click());
+    // Click the wrapper that has the React handler; the hidden input's click doesn't update controlled state
+    await this.redeemPointsToggle.evaluate((el) => {
+      const wrapper = el.closest('button') || el.closest('[role="button"]') || el.parentElement;
+      (wrapper || el).click();
+    });
   }
 
   async incrementQuantity() {
@@ -79,7 +83,7 @@ export class CheckoutPage {
 
   async checkCartItem(quantity) {
     await this.cartItems.waitFor({ state: 'visible' });
-}
+  }
 
   async addToOrder() {
     await this.addToOrderButton.click();
