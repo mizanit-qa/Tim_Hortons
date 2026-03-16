@@ -47,6 +47,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await page.waitForLoadState('domcontentloaded');
   await app.orderPaymentPage.selectVisaCard();
   await app.orderPaymentPage.continueToOrder();
+  await app.orderPaymentPage.confirmYourStorePlaceOrder();
   await page.waitForTimeout(10000);
  
 });

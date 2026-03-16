@@ -29,6 +29,8 @@ export class OrderPaymentPage {
   
       // Continue button
       this.continueOrderButton = page.getByTestId('continue-order');
+
+      this.confirmYourStorePlaceOrderButton = page.getByTestId('place-order');
     }
 
     async selectVisaCard() {
@@ -51,6 +53,8 @@ export class OrderPaymentPage {
         await this.continueOrderButton.click();
     }
 
-
+    async confirmYourStorePlaceOrder() {
+        await this.confirmYourStorePlaceOrderButton.click();
+    }
 
   }
