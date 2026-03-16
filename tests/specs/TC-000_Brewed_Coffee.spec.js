@@ -32,4 +32,21 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.menuPage.clickCartAndCheckout();
   await page.waitForLoadState('domcontentloaded');
   await expect(page).toHaveURL(/checkout|cart/i, { timeout: 20000 });
+  await app.checkoutPage.selectDriveThru();
+  await app.checkoutPage.selectCurbsidePickup();
+  await app.checkoutPage.selectPickUp();
+  await app.checkoutPage.selectDineIn();
+  await app.checkoutPage.turnOffRedeemPoints();
+  await app.checkoutPage.incrementQuantity();
+  await app.checkoutPage.addToOrder();
+  await app.checkoutPage.startPrepTime5Minutes();
+  await app.checkoutPage.startPrepTime15Minutes();
+  await app.checkoutPage.startPrepTime20Minutes();
+  await app.checkoutPage.startPrepTimeNow();
+  await app.checkoutPage.continueToPayment();
+  await page.waitForLoadState('domcontentloaded');
+  await app.orderPaymentPage.selectVisaCard();
+  await app.orderPaymentPage.continueToOrder();
+  await page.waitForTimeout(10000);
+ 
 });

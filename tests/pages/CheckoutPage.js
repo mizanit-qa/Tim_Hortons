@@ -1,4 +1,4 @@
-export class CartPage {
+export class CheckoutPage {
   constructor(page) {
     this.page = page;
 
@@ -32,12 +32,15 @@ export class CartPage {
     // Add items button
     this.addItemsButton = page.getByRole('button', { name: /add items/i });
 
-    // Pickup time radios
+    // Add to Order buttons (upsell; use .first() or filter by name when multiple)
+    this.addToOrderButton = page.getByTestId('upsell-add-to-order-btn').first();
+
+    // Pickup time radios (ids starting with digits need attribute selector)
     this.nowPickupTime = page.locator('#now');
-    this.fiveMinPickupTime = page.locator('#5min');
-    this.tenMinPickupTime = page.locator('#10min');
-    this.fifteenMinPickupTime = page.locator('#15min');
-    this.twentyMinPickupTime = page.locator('#20min');
+    this.fiveMinPickupTime = page.locator('[id="5min"]');
+    this.tenMinPickupTime = page.locator('[id="10min"]');
+    this.fifteenMinPickupTime = page.locator('[id="15min"]');
+    this.twentyMinPickupTime = page.locator('[id="20min"]');
 
     // Continue
     this.continueButton = page.getByRole('button', { name: /^continue$/i });
@@ -45,4 +48,65 @@ export class CartPage {
     // Close cart
     this.closeCartButton = page.getByTestId('close-button');
   }
+
+  async selectDriveThru() {
+    await this.driveThruRadio.click({ force: true });
+  }
+
+  async selectPickUp() {
+    await this.pickUpRadio.click({ force: true });
+  }
+
+  async selectCurbsidePickup() {
+    await this.curbsidePickupRadio.click({ force: true });
+  }
+
+  async selectDineIn() {
+    await this.dineInRadio.click({ force: true });
+  }
+
+  async turnOffRedeemPoints() {
+    await this.redeemPointsToggle.click();
+  }
+
+  async incrementQuantity() {
+    await this.incrementQty.click();
+  }
+
+  async decrementQuantity() {
+    await this.decrementQty.click();
+  }
+
+  async checkCartItem(quantity) {
+    await this.cartItems.waitFor({ state: 'visible' });
+}
+
+  async addToOrder() {
+    await this.addToOrderButton.click();
+  }
+
+  async startPrepTimeNow() {
+    await this.nowPickupTime.evaluate((el) => el.click());
+  }
+
+  async startPrepTime5Minutes() {
+    await this.fiveMinPickupTime.evaluate((el) => el.click());
+  }
+
+  async startPrepTime10Minutes() {
+    await this.tenMinPickupTime.evaluate((el) => el.click());
+  }
+
+  async startPrepTime15Minutes() {
+    await this.fifteenMinPickupTime.evaluate((el) => el.click());
+  }
+
+  async startPrepTime20Minutes() {
+    await this.twentyMinPickupTime.evaluate((el) => el.click());
+  }
+
+  async continueToPayment() {
+    await this.continueButton.click();
+  }
+
 }
