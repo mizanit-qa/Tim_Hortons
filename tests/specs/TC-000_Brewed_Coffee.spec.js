@@ -59,7 +59,8 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await expect(cartItem).toContainText('1 1 Whipped Topping');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
-  await expect(cartItem).toContainText('$11.16');
+  const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '11.16'}`;
+  await expect(cartItem).toContainText(expectedItemTotal);
 
   await app.checkoutPage.continueToPayment();
   await page.waitForLoadState('domcontentloaded');
