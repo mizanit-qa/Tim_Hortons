@@ -15,6 +15,9 @@ export class OrderPaymentPage {
       // Dropdown options (payment-method row to avoid matching <title> / add-new-cc-link)
       this.mastercardOption = page.locator('[data-testid^="payment-method-"]').filter({ hasText: /MASTERCARD/i }).first();
       this.visaOption = page.locator('[data-testid^="payment-method-"]').filter({ hasText: /VISA/i }).first();
+      // Fallback when payment methods use different markup (no data-testid pattern)
+      this.visaOptionFallback = page.getByTestId('cart-payment').getByRole('button', { name: /Visa/i }).first();
+      this.visaOptionFallbackAnywhere = page.getByRole('button', { name: /Visa/i }).first();
       this.addNewPaymentMethodOption = page.getByText(/Add New Payment Method/i);
   
       // Specific card endings (more stable)
@@ -34,18 +37,55 @@ export class OrderPaymentPage {
     }
 
     async selectVisaCard() {
-        await this.paymentDropdownToggle.click({ force: true });
-        await this.visaOption.waitFor({ state: 'visible' });
-        await this.visaOption.click({ force: true });
+        if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
+            await this.paymentDropdownToggle.click({ force: true });
+        }
+        const primaryVisible = await this.visaOption.isVisible().catch(() => false);
+        if (primaryVisible) {
+            await this.visaOption.click({ force: true });
+            return;
+        }
+        const fallbackVisible = await this.visaOptionFallback.isVisible().catch(() => false);
+        if (fallbackVisible) {
+            await this.visaOptionFallback.click({ force: true });
+            return;
+        }
+        const anywhereVisible = await this.visaOptionFallbackAnywhere.isVisible().catch(() => false);
+        if (anywhereVisible) {
+            await this.visaOptionFallbackAnywhere.click({ force: true });
+            return;
+        }
+        // Prefer attached over visible — rows can be in DOM but obscured / not "visible" to Playwright
+        await Promise.race([
+            this.visaOption.waitFor({ state: 'attached', timeout: 15000 }),
+            this.visaOptionFallback.waitFor({ state: 'attached', timeout: 15000 }),
+            this.visaOptionFallbackAnywhere.waitFor({ state: 'attached', timeout: 15000 })
+        ]).catch(() => {});
+        const countPrimary = await this.visaOption.count();
+        if (countPrimary > 0) {
+            await this.visaOption.click({ force: true });
+        } else if ((await this.visaOptionFallback.count()) > 0) {
+            await this.visaOptionFallback.click({ force: true });
+        } else if ((await this.visaOptionFallbackAnywhere.count()) > 0) {
+            await this.visaOptionFallbackAnywhere.click({ force: true });
+        } else {
+            throw new Error('Visa payment option not found. Tried payment-method row and button with name Visa.');
+        }
     }
 
     async selectMastercard() {
-        await this.paymentDropdownToggle.click({ force: true });
-        await this.mastercardOption.click();
+        if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
+            await this.paymentDropdownToggle.click({ force: true });
+        }
+        await this.mastercardOption.waitFor({ state: 'visible', timeout: 15000 });
+        await this.mastercardOption.click({ force: true });
     }
 
     async selectTimsGiftCard() {
-        await this.paymentDropdownToggle.click({ force: true });
+        if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
+            await this.paymentDropdownToggle.click({ force: true });
+        }
+        await this.timGiftCardRow.waitFor({ state: 'visible', timeout: 15000 });
         await this.timGiftCardRow.click();
     }
 

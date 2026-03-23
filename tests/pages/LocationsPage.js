@@ -11,20 +11,39 @@ export class LocationsPage {
     this.storeAddress = address.trim();
     this.storeNamePattern = new RegExp(storeName.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
 
-    this.pickUpButton = page.getByRole('button', { name: /Choose a Location|Pick Up/i });
+    // May render as button or link; bottom bar often says "Choose a Location"
+    this.pickUpButton = page
+      .getByRole('button', { name: /Choose a Location|Pick Up|Location/i })
+      .or(page.getByRole('link', { name: /Choose a Location|Pick Up|Location/i }));
     this.selectedStoreChip = page.getByRole('button', { name: /Pick Up\s+1500|Pick Up\s+\d+/i });
     this.yourAddress = page.getByTestId('storelocator-autocomplete');
     this.storeAccordionBtn = page.getByRole('button', { name: this.storeNamePattern });
-    this.firstSuggestion = page
-      .locator('[id^="downshift-"][id$="-menu"] [role="option"], [role="listbox"] [role="option"]')
-      .first();
+    /** Any common autocomplete dropdown option (Downshift, Reach, native listbox) */
+    this.autocompleteOptions = page.locator(
+      [
+        '[id^="downshift"][id$="-menu"] [role="option"]',
+        '[role="listbox"] [role="option"]',
+        '[role="menu"] [role="option"]',
+        '[data-testid*="autocomplete"] [role="option"]',
+        'ul[role="listbox"] > li[role="option"]',
+      ].join(', ')
+    );
     this.storeOrderBtn = page.getByRole('button', { name: /^Order$|Order Here|Start Order/i });
   }
 
   async storeSelection() {
-    await this.pickUpButton.first().click();
+    await this.page.waitForLoadState('domcontentloaded');
+    const pickUp = this.pickUpButton.first();
+    await pickUp.waitFor({ state: 'visible', timeout: 30000 });
+    await pickUp.scrollIntoViewIfNeeded();
+    await pickUp.click({ force: true, timeout: 30000 });
+    await this.yourAddress.click();
     await this.yourAddress.fill(this.storeAddress);
-    await this.firstSuggestion.click();
+    // Some comboboxes only open the list after keystrokes / debounce
+    await this.yourAddress.press('ArrowDown').catch(() => {});
+    const firstOpt = this.autocompleteOptions.first();
+    await firstOpt.waitFor({ state: 'visible', timeout: 20000 });
+    await firstOpt.click({ timeout: 20000 });
     await this.storeAccordionBtn.click();
     await this.storeOrderBtn.first().click();
   }
