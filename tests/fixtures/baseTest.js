@@ -12,6 +12,8 @@ import { BrewedCoffee } from '../components/BrewedCoffee.js';
 import { loadEnvFile } from '../utils/loadEnv.js';
 import { CheckoutPage } from '../pages/CheckoutPage.js';
 import { OrderPaymentPage } from '../pages/OrderPaymentPage.js';
+import { AccountPage } from '../pages/AccountPage.js';
+import { AccountInfoPage } from '../pages/AccountInfoPage.js';
 
 loadEnvFile();
 
@@ -42,8 +44,12 @@ loadEnvFile();
  *   brewedCoffee: BrewedCoffee;
  *   credentials: { existingUserEmail: string; otpCode: string; badOtpCode: string; nonExistingUserEmail: string };
  *   checkoutPage: CheckoutPage;
+ *   orderPaymentPage: OrderPaymentPage;
+ *   accountPage: AccountPage;
+ *   accountInfoPage: AccountInfoPage;
  *   signInExisting(email?: string, code?: string): Promise<void>;
  *   openSignupProtected(): Promise<void>;
+ *   signOutViaAccountMenu(): Promise<void>;
  * }} AppFixture
  */
 
@@ -103,6 +109,8 @@ export const test = base.extend({
       },
       checkoutPage: new CheckoutPage(page),
       orderPaymentPage: new OrderPaymentPage(page),
+      accountPage: new AccountPage(page),
+      accountInfoPage: new AccountInfoPage(page),
 
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
         await app.protectedPage.passwordProtection();
@@ -111,6 +119,13 @@ export const test = base.extend({
       },
       async openSignupProtected() {
         await app.protectedPage.passwordProtectionSignup();
+      },
+
+      /** Home → My Account → Account Info → Sign Out */
+      async signOutViaAccountMenu() {
+        await app.homePage.openMyAccount();
+        await app.accountPage.openAccountInfo();
+        await app.accountInfoPage.signOut();
       }
     };
 

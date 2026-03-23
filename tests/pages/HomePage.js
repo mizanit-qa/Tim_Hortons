@@ -2,17 +2,13 @@ export class HomePage {
   constructor(page) {
     this.page = page;
     this.menuLink = page.getByRole('link', { name: /^Menu$/i });
-    this.timsforGoodLink = page
-      .getByTestId('Tims for Good')
-      .or(page.getByRole('link', { name: /Tims for Good/i }));
-    this.timsCateringLink = page
-      .getByTestId('Tims Catering')
-      .or(page.getByRole('link', { name: /Tims Catering/i }));
-    this.timShopLink = page
-      .getByTestId('TimShop')
-      .or(page.getByRole('link', { name: /TimShop|Tim Shop/i }));
+    this.timsforGoodLink = page.getByTestId('Tims for Good').or(page.getByRole('link', { name: /Tims for Good/i }));
+    this.timsCateringLink = page.getByTestId('Tims Catering').or(page.getByRole('link', { name: /Tims Catering/i }));
+    this.timShopLink = page.getByTestId('TimShop').or(page.getByRole('link', { name: /TimShop|Tim Shop/i }));
     this.moreLink = page.getByTestId('More');
     this.cateringLink = this.timsCateringLink;
+    // Signed-in header: tooltip "My Account" or link href /account (profile)
+    this.myAccountLink = page.getByRole('link', { name: /My Account/i }).or(page.locator('header a[href$="/account"], [role="banner"] a[href$="/account"]').first());
     this.baseUrl = process.env.BASE_URL;
     if (!this.baseUrl) {
       throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
@@ -43,5 +39,11 @@ export class HomePage {
 
   async timShop() {
     await this.timShopLink.first().click();
+  }
+
+  /** Opens My Account from the header; lands on /account (not /account/info) */
+  async openMyAccount() {
+    await this.myAccountLink.first().click({ timeout: 15000 });
+    await this.page.waitForURL(/\/account\/?$/i, { timeout: 20000 });
   }
 }

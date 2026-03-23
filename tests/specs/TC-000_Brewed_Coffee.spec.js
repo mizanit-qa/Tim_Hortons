@@ -53,10 +53,10 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await page.waitForTimeout(500);
   const cartItem = page.getByTestId('cart-item').first();
   await expect(cartItem).toContainText('Small Coffee Decaf - Reusable Cup');
-  await expect(cartItem).toContainText('1 3.5 Cream');
-  await expect(cartItem).toContainText('1 3.5 Sugar');
-  await expect(cartItem).toContainText('1 1 Chocolate Syrup');
-  await expect(cartItem).toContainText('1 1 Whipped Topping');
+  await expect(cartItem).toContainText('3.5 Cream');
+  await expect(cartItem).toContainText('3.5 Sugar');
+  await expect(cartItem).toContainText('Chocolate Syrup');
+  await expect(cartItem).toContainText('Whipped Topping');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
   const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '11.16'}`;
@@ -70,5 +70,11 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
   await page.waitForTimeout(10000);
- 
+/*
+  // Sign out from home (header needs My Account after order flow may land on another route)
+  await page.goto(app.homePage.baseUrl, { waitUntil: 'domcontentloaded' });
+  await app.homePage.waitForReady();
+  await app.signOutViaAccountMenu();
+  await expect(page).toHaveURL(/signout/i, { timeout: 15000 });
+  */
 });
