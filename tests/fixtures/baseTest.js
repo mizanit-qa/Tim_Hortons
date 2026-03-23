@@ -61,27 +61,33 @@ function parseCsv(value) {
     .filter(Boolean);
 }
 
-const DEFAULT_TEST_USER = process.env.TEST_USER_EMAIL;
-const DEFAULT_TEST_USERS = parseCsv(process.env.TEST_USER_EMAILS);
-const DEFAULT_TEST_OTP = process.env.TEST_OTP;
-const DEFAULT_BAD_OTP = process.env.TEST_BAD_OTP;
-const DEFAULT_NON_EXISTING_USER = process.env.NON_EXISTING_USER_EMAIL;
+const DEFAULT_TEST_USER = process.env.TEST_USER_EMAIL?.trim();
+const DEFAULT_TEST_USERS = parseCsv(process.env.TEST_USER_EMAILS ?? '');
+const DEFAULT_TEST_OTP = process.env.TEST_OTP?.trim();
+const DEFAULT_BAD_OTP = process.env.TEST_BAD_OTP?.trim();
+const DEFAULT_NON_EXISTING_USER = process.env.NON_EXISTING_USER_EMAIL?.trim();
 
-if (!DEFAULT_TEST_USER) {
-  throw new Error('TEST_USER_EMAIL is required. Set it in .env (see .env.example).');
-}
-if (!DEFAULT_TEST_OTP) {
-  throw new Error('TEST_OTP is required. Set it in .env (see .env.example).');
-}
-if (!DEFAULT_BAD_OTP) {
-  throw new Error('TEST_BAD_OTP is required. Set it in .env (see .env.example).');
-}
-if (!DEFAULT_NON_EXISTING_USER) {
-  throw new Error('NON_EXISTING_USER_EMAIL is required. Set it in .env (see .env.example).');
+/** Skip tests that need credentials instead of throwing at import (e.g. CI without secrets yet). */
+function getMissingCredentialEnvVars() {
+  const missing = [];
+  if (!DEFAULT_TEST_USER) missing.push('TEST_USER_EMAIL');
+  if (!DEFAULT_TEST_OTP) missing.push('TEST_OTP');
+  if (!DEFAULT_BAD_OTP) missing.push('TEST_BAD_OTP');
+  if (!DEFAULT_NON_EXISTING_USER) missing.push('NON_EXISTING_USER_EMAIL');
+  return missing;
 }
 
 export const test = base.extend({
   app: async ({ page }, use, testInfo) => {
+    const missing = getMissingCredentialEnvVars();
+    if (missing.length > 0) {
+      testInfo.skip(
+        true,
+        `Missing required env: ${missing.join(', ')}. Set in .env locally or add GitHub Actions secrets (see .env.example).`
+      );
+      return;
+    }
+
     const workerIndex = testInfo.workerIndex ?? 0;
     const existingUserEmail =
       DEFAULT_TEST_USERS.length > 0
