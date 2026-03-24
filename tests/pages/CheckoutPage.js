@@ -65,6 +65,23 @@ export class CheckoutPage {
     await this.dineInRadio.click({ force: true });
   }
 
+  async selectServiceModeWithFallback() {
+    const availability = await Promise.all([
+      this.curbsidePickupRadio.isVisible().catch(() => false),
+      this.pickUpRadio.isVisible().catch(() => false),
+      this.dineInRadio.isVisible().catch(() => false),
+    ]);
+    const allPreferredModesAvailable = availability.every(Boolean);
+
+    if (!allPreferredModesAvailable) {
+      await this.driveThruRadio.click({ force: true });
+      return 'Drive Thru';
+    }
+
+    await this.dineInRadio.click({ force: true });
+    return 'Dine In';
+  }
+
   async turnOffRedeemPoints() {
     // Click the wrapper that has the React handler; the hidden input's click doesn't update controlled state
     await this.redeemPointsToggle.evaluate((el) => {

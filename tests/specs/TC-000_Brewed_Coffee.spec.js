@@ -33,22 +33,23 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.menuPage.clickCartAndCheckout();
   await page.waitForLoadState('domcontentloaded');
   await expect(page).toHaveURL(/checkout|cart/i, { timeout: 20000 });
-  await app.checkoutPage.selectDriveThru();
-  await app.checkoutPage.selectCurbsidePickup();
-  await app.checkoutPage.selectPickUp();
-  await app.checkoutPage.selectDineIn();
+  const selectedServiceMode = await app.checkoutPage.selectServiceModeWithFallback();
 
-  await expect(page.getByRole('heading', { name: 'Dine In Order' })).toBeVisible({ timeout: 20000 });
+  await expect(
+    page.getByRole('heading', { name: new RegExp(`${selectedServiceMode}\\s+Order`, 'i') })
+  ).toBeVisible({ timeout: 20000 });
 
   await expect(page.getByTestId('rewards-management-toggle')).toBeVisible({ timeout: 20000 });
   await app.checkoutPage.turnOffRedeemPoints();
 
   await app.checkoutPage.incrementQuantity();
   await app.checkoutPage.addToOrder();
-  await app.checkoutPage.startPrepTime5Minutes();
-  await app.checkoutPage.startPrepTime15Minutes();
-  await app.checkoutPage.startPrepTime20Minutes();
-  await app.checkoutPage.startPrepTimeNow();
+  if (selectedServiceMode !== 'Drive Thru') {
+    await app.checkoutPage.startPrepTime5Minutes();
+    await app.checkoutPage.startPrepTime15Minutes();
+    await app.checkoutPage.startPrepTime20Minutes();
+    await app.checkoutPage.startPrepTimeNow();
+  }
 
   await page.waitForTimeout(500);
   const cartItem = page.getByTestId('cart-item').first();
@@ -70,11 +71,12 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
   await page.waitForTimeout(10000);
-/*
+
   // Sign out from home (header needs My Account after order flow may land on another route)
   await page.goto(app.homePage.baseUrl, { waitUntil: 'domcontentloaded' });
   await app.homePage.waitForReady();
   await app.signOutViaAccountMenu();
-  await expect(page).toHaveURL(/signout/i, { timeout: 15000 });
-  */
+  await expect(app.accountInfoPage.signOutYesBtn).toBeVisible({ timeout: 15000 });
+  await app.accountInfoPage.signOutYes();
+  await expect(page).toHaveURL(/signin/i, { timeout: 15000 });
 });
