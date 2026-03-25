@@ -1,7 +1,13 @@
 import { expect, test } from '../../fixtures/baseTest.js';
 
-test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
+test('@stateful Boston Cream Donut Selection', async ({ page, app }) => {
   test.setTimeout(120000);
+  const bostonExpectedTotal = process.env.TEST_EXPECTED_ITEM_TOTAL_BOSTON_CREAM_DONUT?.trim();
+  test.skip(
+    !bostonExpectedTotal,
+    'Set TEST_EXPECTED_ITEM_TOTAL_BOSTON_CREAM_DONUT in .env (see .env.example).'
+  );
+
   await app.signInExisting();
 
   await app.locationsPage.storeSelection();
@@ -43,9 +49,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await expect(cartItem).toContainText('Boston Cream Donut');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
-  // Total varies by store/pricing; override with TEST_EXPECTED_ITEM_TOTAL in .env when UI differs
-  //const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '13.56'}`;
-  //await expect(cartItem).toContainText(expectedItemTotal);
+  await expect(cartItem).toContainText(`$${bostonExpectedTotal}`);
 
   await app.checkoutPage.continueToPayment();
   await page.waitForLoadState('domcontentloaded');
