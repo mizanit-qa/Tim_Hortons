@@ -98,6 +98,7 @@ export class BrewedCoffee {
   async addChocolateSyrup() {
     await this.flavourShots.click();
     await this.page.getByRole('main').getByRole('button', { name: 'Increment Chocolate Syrup' }).click();
+    await this.page.getByRole('main').getByRole('button', { name: 'Increment Chocolate Syrup' }).click();
   }
 
   async addWhippedTopping() {

@@ -61,7 +61,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
   // Total varies by store/pricing; override with TEST_EXPECTED_ITEM_TOTAL in .env when UI differs
-  const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '11.16'}`;
+  const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '13.56'}`;
   await expect(cartItem).toContainText(expectedItemTotal);
 
   await app.checkoutPage.continueToPayment();
