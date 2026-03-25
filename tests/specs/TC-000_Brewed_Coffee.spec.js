@@ -60,7 +60,8 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await expect(cartItem).toContainText('Whipped Topping');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
-  const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '11.56'}`;
+  // Total varies by store/pricing; override with TEST_EXPECTED_ITEM_TOTAL in .env when UI differs
+  const expectedItemTotal = `$${process.env.TEST_EXPECTED_ITEM_TOTAL ?? '11.16'}`;
   await expect(cartItem).toContainText(expectedItemTotal);
 
   await app.checkoutPage.continueToPayment();
@@ -68,6 +69,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
 
   //Order Payment Page
   await app.orderPaymentPage.selectVisaCard();
+  //await app.orderPaymentPage.selectMastercard();
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
   await page.waitForTimeout(10000);
