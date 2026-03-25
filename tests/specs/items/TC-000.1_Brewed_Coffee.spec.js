@@ -1,4 +1,4 @@
-import { expect, test } from '../fixtures/baseTest.js';
+import { expect, test } from '../../fixtures/baseTest.js';
 
 test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   test.setTimeout(120000);

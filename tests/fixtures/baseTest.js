@@ -14,6 +14,9 @@ import { CheckoutPage } from '../pages/CheckoutPage.js';
 import { OrderPaymentPage } from '../pages/OrderPaymentPage.js';
 import { AccountPage } from '../pages/AccountPage.js';
 import { AccountInfoPage } from '../pages/AccountInfoPage.js';
+import { NestedSubMenu } from '../components/NestedSubMenu.js';
+import { BostonCreamDonut } from '../components/BostonCreamDonut.js';
+
 
 loadEnvFile();
 
@@ -117,7 +120,10 @@ export const test = base.extend({
       orderPaymentPage: new OrderPaymentPage(page),
       accountPage: new AccountPage(page),
       accountInfoPage: new AccountInfoPage(page),
+      nestedSubMenu: new NestedSubMenu(page),
+      bostonCreamDonut: new BostonCreamDonut(page),
 
+      
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
         await app.protectedPage.passwordProtection();
         await app.signInPage.userSignIn(email, code);
