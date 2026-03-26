@@ -36,7 +36,7 @@ export class LocationsPage {
     const pickUp = this.pickUpButton.first();
     await pickUp.waitFor({ state: 'visible', timeout: 30000 });
     await pickUp.scrollIntoViewIfNeeded();
-    await pickUp.click({ force: true, timeout: 30000 });
+    await this.clickWithFallback(pickUp, 30000);
     await this.yourAddress.click();
     await this.yourAddress.fill(this.storeAddress);
     // Some comboboxes only open the list after keystrokes / debounce
@@ -44,7 +44,17 @@ export class LocationsPage {
     const firstOpt = this.autocompleteOptions.first();
     await firstOpt.waitFor({ state: 'visible', timeout: 20000 });
     await firstOpt.click({ timeout: 20000 });
-    await this.storeAccordionBtn.click();
-    await this.storeOrderBtn.first().click();
+    await this.clickWithFallback(this.storeAccordionBtn);
+    await this.clickWithFallback(this.storeOrderBtn.first());
+  }
+
+  async clickWithFallback(locator, timeout = 10000) {
+    await locator.waitFor({ state: 'attached', timeout });
+    try {
+      await locator.click({ timeout });
+    } catch {
+      await locator.scrollIntoViewIfNeeded().catch(() => {});
+      await locator.click({ force: true, timeout });
+    }
   }
 }

@@ -19,17 +19,17 @@ export class BrewedCoffee {
 
   async sizeSelection() {
     await this.coffeeSize.click();
-    await this.page.getByRole('main').getByRole('radio', { name: /Small/ }).click({ force: true });
+    await this.clickWithFallback(this.page.getByRole('main').getByRole('radio', { name: /Small/ }));
   }
 
   async blendSelection() {
     await this.coffeeBlend.click();
-    await this.page.getByRole('main').getByRole('radio', { name: /Decaf/ }).click({ force: true });
+    await this.clickWithFallback(this.page.getByRole('main').getByRole('radio', { name: /Decaf/ }));
   }
 
   async reusableCupSelection() {
     await this.reusableCup.click();
-    await this.page.getByRole('main').getByRole('radio', { name: /Yes/ }).click({ force: true });
+    await this.clickWithFallback(this.page.getByRole('main').getByRole('radio', { name: /Yes/ }));
   }
 
   async blackSelection() {
@@ -121,5 +121,15 @@ export class BrewedCoffee {
 
   async addToOrder() {
     await this.page.getByRole('main').getByRole('button', { name: /Add.*Brewed Coffee to order/ }).click();
+  }
+
+  async clickWithFallback(locator, timeout = 10000) {
+    await locator.waitFor({ state: 'attached', timeout });
+    try {
+      await locator.click({ timeout });
+    } catch {
+      await locator.scrollIntoViewIfNeeded().catch(() => {});
+      await locator.click({ force: true, timeout });
+    }
   }
 }

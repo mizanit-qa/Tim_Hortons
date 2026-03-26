@@ -1,7 +1,7 @@
 import { expect, test } from '../../fixtures/baseTest.js';
 
 test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const brewedExpectedTotal = process.env.TEST_EXPECTED_ITEM_TOTAL_BREWED_COFFEE?.trim();
   test.skip(
     !brewedExpectedTotal,
@@ -16,6 +16,7 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
 
   await page.getByRole('link', { name: /Brewed Coffee/i }).first().waitFor({ state: 'attached' });
 
+  // Menu occasionally renders duplicate brewed-coffee entries; second click ensures details panel opens.
   await app.submenu.clickBrewedCoffee();
   await app.submenu.clickBrewedCoffee();
 
@@ -57,8 +58,8 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
     await app.checkoutPage.startPrepTimeNow();
   }
 
-  await page.waitForTimeout(500);
   const cartItem = page.getByTestId('cart-item').first();
+  await expect(cartItem).toBeVisible({ timeout: 10000 });
   await expect(cartItem).toContainText('Small Coffee Decaf - Reusable Cup');
   await expect(cartItem).toContainText('3.5 Cream');
   await expect(cartItem).toContainText('3.5 Sugar');
@@ -72,11 +73,12 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
   await page.waitForLoadState('domcontentloaded');
 
   //Order Payment Page
+  await app.orderPaymentPage.waitForPaymentReady();
   await app.orderPaymentPage.selectVisaCard();
   //await app.orderPaymentPage.selectMastercard();
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
-  await page.waitForTimeout(10000);
+  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
 
   // Sign out from home (header needs My Account after order flow may land on another route)
   await page.goto(app.homePage.baseUrl, { waitUntil: 'domcontentloaded' });

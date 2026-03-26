@@ -36,38 +36,51 @@ export class OrderPaymentPage {
       this.confirmYourStorePlaceOrderButton = page.getByTestId('place-order');
     }
 
+    async waitForPaymentReady(timeout = 20000) {
+        await this.paymentSection.first().waitFor({ state: 'visible', timeout });
+        // On some builds methods render in either container or direct buttons.
+        await Promise.race([
+            this.paymentMethodsContainer.first().waitFor({ state: 'visible', timeout }),
+            this.paymentDropdownToggle.waitFor({ state: 'visible', timeout }),
+            this.visaOption.waitFor({ state: 'attached', timeout }),
+            this.visaOptionFallback.waitFor({ state: 'attached', timeout }),
+            this.visaOptionFallbackAnywhere.waitFor({ state: 'attached', timeout }),
+        ]).catch(() => {});
+    }
+
     async selectVisaCard() {
+        await this.waitForPaymentReady(15000);
         if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
-            await this.paymentDropdownToggle.click({ force: true });
+            await this.clickWithFallback(this.paymentDropdownToggle);
         }
         const primaryVisible = await this.visaOption.isVisible().catch(() => false);
         if (primaryVisible) {
-            await this.visaOption.click({ force: true });
+            await this.clickWithFallback(this.visaOption);
             return;
         }
         const fallbackVisible = await this.visaOptionFallback.isVisible().catch(() => false);
         if (fallbackVisible) {
-            await this.visaOptionFallback.click({ force: true });
+            await this.clickWithFallback(this.visaOptionFallback);
             return;
         }
         const anywhereVisible = await this.visaOptionFallbackAnywhere.isVisible().catch(() => false);
         if (anywhereVisible) {
-            await this.visaOptionFallbackAnywhere.click({ force: true });
+            await this.clickWithFallback(this.visaOptionFallbackAnywhere);
             return;
         }
         // Prefer attached over visible — rows can be in DOM but obscured / not "visible" to Playwright
         await Promise.race([
-            this.visaOption.waitFor({ state: 'attached', timeout: 15000 }),
-            this.visaOptionFallback.waitFor({ state: 'attached', timeout: 15000 }),
-            this.visaOptionFallbackAnywhere.waitFor({ state: 'attached', timeout: 15000 })
+            this.visaOption.waitFor({ state: 'attached', timeout: 6000 }),
+            this.visaOptionFallback.waitFor({ state: 'attached', timeout: 6000 }),
+            this.visaOptionFallbackAnywhere.waitFor({ state: 'attached', timeout: 6000 })
         ]).catch(() => {});
         const countPrimary = await this.visaOption.count();
         if (countPrimary > 0) {
-            await this.visaOption.click({ force: true });
+            await this.clickWithFallback(this.visaOption);
         } else if ((await this.visaOptionFallback.count()) > 0) {
-            await this.visaOptionFallback.click({ force: true });
+            await this.clickWithFallback(this.visaOptionFallback);
         } else if ((await this.visaOptionFallbackAnywhere.count()) > 0) {
-            await this.visaOptionFallbackAnywhere.click({ force: true });
+            await this.clickWithFallback(this.visaOptionFallbackAnywhere);
         } else {
             throw new Error('Visa payment option not found. Tried payment-method row and button with name Visa.');
         }
@@ -75,26 +88,36 @@ export class OrderPaymentPage {
 
     async selectMastercard() {
         if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
-            await this.paymentDropdownToggle.click({ force: true });
+            await this.clickWithFallback(this.paymentDropdownToggle);
         }
         await this.mastercardOption.waitFor({ state: 'visible', timeout: 15000 });
-        await this.mastercardOption.click({ force: true });
+        await this.clickWithFallback(this.mastercardOption);
     }
 
     async selectTimsGiftCard() {
         if (await this.paymentDropdownToggle.isVisible().catch(() => false)) {
-            await this.paymentDropdownToggle.click({ force: true });
+            await this.clickWithFallback(this.paymentDropdownToggle);
         }
         await this.timGiftCardRow.waitFor({ state: 'visible', timeout: 15000 });
-        await this.timGiftCardRow.click();
+        await this.clickWithFallback(this.timGiftCardRow);
     }
 
     async continueToOrder() {
-        await this.continueOrderButton.click();
+        await this.clickWithFallback(this.continueOrderButton);
     }
 
     async confirmYourStorePlaceOrder() {
-        await this.confirmYourStorePlaceOrderButton.click();
+        await this.clickWithFallback(this.confirmYourStorePlaceOrderButton);
+    }
+
+    async clickWithFallback(locator, timeout = 8000) {
+        await locator.waitFor({ state: 'attached', timeout });
+        try {
+            await locator.click({ timeout });
+        } catch {
+            await locator.scrollIntoViewIfNeeded().catch(() => {});
+            await locator.click({ force: true, timeout });
+        }
     }
 
   }

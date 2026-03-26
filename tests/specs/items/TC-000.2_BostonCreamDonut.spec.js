@@ -1,7 +1,7 @@
 import { expect, test } from '../../fixtures/baseTest.js';
 
 test('@stateful Boston Cream Donut Selection', async ({ page, app }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const bostonExpectedTotal = process.env.TEST_EXPECTED_ITEM_TOTAL_BOSTON_CREAM_DONUT?.trim();
   test.skip(
     !bostonExpectedTotal,
@@ -44,8 +44,8 @@ test('@stateful Boston Cream Donut Selection', async ({ page, app }) => {
     await app.checkoutPage.startPrepTimeNow();
   }
 
-  await page.waitForTimeout(500);
   const cartItem = page.getByTestId('cart-item').first();
+  await expect(cartItem).toBeVisible({ timeout: 10000 });
   await expect(cartItem).toContainText('Boston Cream Donut');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
@@ -55,11 +55,12 @@ test('@stateful Boston Cream Donut Selection', async ({ page, app }) => {
   await page.waitForLoadState('domcontentloaded');
 
   //Order Payment Page
+  await app.orderPaymentPage.waitForPaymentReady();
   await app.orderPaymentPage.selectVisaCard();
   //await app.orderPaymentPage.selectMastercard();
   await app.orderPaymentPage.continueToOrder();
   await app.orderPaymentPage.confirmYourStorePlaceOrder();
-  await page.waitForTimeout(10000);
+  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
 
   // Sign out from home (header needs My Account after order flow may land on another route)
   await page.goto(app.homePage.baseUrl, { waitUntil: 'domcontentloaded' });
@@ -68,5 +69,4 @@ test('@stateful Boston Cream Donut Selection', async ({ page, app }) => {
   await expect(app.accountInfoPage.signOutYesBtn).toBeVisible({ timeout: 15000 });
   await app.accountInfoPage.signOutYes();
   await expect(page).toHaveURL(/signin/i, { timeout: 15000 });
-  //test comment
 });

@@ -50,44 +50,70 @@ export class CheckoutPage {
   }
 
   async selectDriveThru() {
-    await this.driveThruRadio.click({ force: true });
+    await this.clickWithFallback(this.driveThruRadio);
   }
 
   async selectPickUp() {
-    await this.pickUpRadio.click({ force: true });
+    await this.clickWithFallback(this.pickUpRadio);
   }
 
   async selectCurbsidePickup() {
-    await this.curbsidePickupRadio.click({ force: true });
+    await this.clickWithFallback(this.curbsidePickupRadio);
   }
 
   async selectDineIn() {
-    await this.dineInRadio.click({ force: true });
+    await this.clickWithFallback(this.dineInRadio);
   }
 
   async selectServiceModeWithFallback() {
-    const availability = await Promise.all([
-      this.curbsidePickupRadio.isVisible().catch(() => false),
-      this.pickUpRadio.isVisible().catch(() => false),
-      this.dineInRadio.isVisible().catch(() => false),
+    const [curbsideExists, pickupExists, dineInExists, driveThruExists] = await Promise.all([
+      this.curbsidePickupRadio.count().then((n) => n > 0).catch(() => false),
+      this.pickUpRadio.count().then((n) => n > 0).catch(() => false),
+      this.dineInRadio.count().then((n) => n > 0).catch(() => false),
+      this.driveThruRadio.count().then((n) => n > 0).catch(() => false),
     ]);
-    const allPreferredModesAvailable = availability.every(Boolean);
+    const allPreferredModesAvailable = curbsideExists && pickupExists && dineInExists;
 
-    if (!allPreferredModesAvailable) {
-      await this.driveThruRadio.click({ force: true });
+    if (!allPreferredModesAvailable && driveThruExists) {
+      await this.clickWithFallback(this.driveThruRadio);
       return 'Drive Thru';
     }
 
-    await this.dineInRadio.click({ force: true });
-    return 'Dine In';
+    if (dineInExists) {
+      await this.clickWithFallback(this.dineInRadio);
+      return 'Dine In';
+    }
+    if (pickupExists) {
+      await this.clickWithFallback(this.pickUpRadio);
+      return 'Pick Up';
+    }
+    if (curbsideExists) {
+      await this.clickWithFallback(this.curbsidePickupRadio);
+      return 'Curbside Pickup';
+    }
+    if (driveThruExists) {
+      await this.clickWithFallback(this.driveThruRadio);
+      return 'Drive Thru';
+    }
+    const orderHeading = this.page.getByRole('heading', { name: /Order/i }).first();
+    const headingText = (await orderHeading.textContent().catch(() => '')) || '';
+    if (/drive\s*thru/i.test(headingText)) return 'Drive Thru';
+    if (/pick\s*up/i.test(headingText)) return 'Pick Up';
+    if (/curbside/i.test(headingText)) return 'Curbside Pickup';
+    if (/dine\s*in/i.test(headingText)) return 'Dine In';
+    throw new Error('No service mode is available on checkout.');
   }
 
   async turnOffRedeemPoints() {
-    // Click the wrapper that has the React handler; the hidden input's click doesn't update controlled state
-    await this.redeemPointsToggle.evaluate((el) => {
-      const wrapper = el.closest('button') || el.closest('[role="button"]') || el.parentElement;
-      (wrapper || el).click();
-    });
+    await this.redeemPointsToggle.waitFor({ state: 'visible', timeout: 10000 });
+    try {
+      await this.redeemPointsToggle.click({ timeout: 5000 });
+    } catch {
+      const clickableWrapper = this.redeemPointsToggle.locator(
+        'xpath=ancestor-or-self::*[self::button or @role="button"][1]'
+      );
+      await this.clickWithFallback(clickableWrapper);
+    }
   }
 
   async incrementQuantity() {
@@ -103,31 +129,49 @@ export class CheckoutPage {
   }
 
   async addToOrder() {
-    await this.addToOrderButton.click();
+    await this.clickWithFallback(this.addToOrderButton);
   }
 
   async startPrepTimeNow() {
-    await this.nowPickupTime.evaluate((el) => el.click());
+    await this.clickWithFallback(this.nowPickupTime);
   }
 
   async startPrepTime5Minutes() {
-    await this.fiveMinPickupTime.evaluate((el) => el.click());
+    await this.clickWithFallback(this.fiveMinPickupTime);
   }
 
   async startPrepTime10Minutes() {
-    await this.tenMinPickupTime.evaluate((el) => el.click());
+    await this.clickWithFallback(this.tenMinPickupTime);
   }
 
   async startPrepTime15Minutes() {
-    await this.fifteenMinPickupTime.evaluate((el) => el.click());
+    await this.clickWithFallback(this.fifteenMinPickupTime);
   }
 
   async startPrepTime20Minutes() {
-    await this.twentyMinPickupTime.evaluate((el) => el.click());
+    await this.clickWithFallback(this.twentyMinPickupTime);
   }
 
   async continueToPayment() {
-    await this.continueButton.click();
+    await this.clickWithFallback(this.continueButton);
+  }
+
+  async clickWithFallback(locator, timeout = 10000) {
+    try {
+      await locator.click({ timeout });
+    } catch {
+      if ((await locator.count()) === 0) {
+        throw new Error('Target element not found for click action.');
+      }
+      const target = locator.first();
+      await target.scrollIntoViewIfNeeded().catch(() => {});
+      try {
+        await target.click({ force: true, timeout });
+      } catch {
+        // Some hidden/overlayed radios are still valid click targets via native click.
+        await target.evaluate((el) => el.click());
+      }
+    }
   }
 
 }

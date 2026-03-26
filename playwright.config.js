@@ -12,7 +12,7 @@ export default defineConfig({
   expect: {
     timeout: 10000,
   },
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
@@ -24,6 +24,14 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      grepInvert: /@stateful/,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'chromium-stateful',
+      grep: /@stateful/,
+      fullyParallel: false,
+      workers: 1,
       use: { ...devices['Desktop Chrome'] },
     },
   ],
