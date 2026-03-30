@@ -1,41 +1,30 @@
 import { expect, test } from '../fixtures/baseTest.js';
 
-test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
+test('@stateful Black Cold Brew Selection', async ({ page, app }) => {
   test.setTimeout(180000);
-  const brewedExpectedTotal = process.env.TEST_EXPECTED_ITEM_TOTAL_BREWED_COFFEE?.trim();
+  const blackColdBrewExpectedTotal = process.env.TEST_EXPECTED_ITEM_TOTAL_BLACK_COLD_BREW?.trim();
   test.skip(
-    !brewedExpectedTotal,
-    'Set TEST_EXPECTED_ITEM_TOTAL_BREWED_COFFEE in .env (see .env.example).'
+    !blackColdBrewExpectedTotal,
+    'Set TEST_EXPECTED_ITEM_TOTAL_BLACK_COLD_BREW in .env (see .env.example).'
   );
 
   await app.signInExisting();
 
   await app.locationsPage.storeSelection();
 
-  await app.menuItems.clickHotDrinks();
+  await app.menuItems.clickColdDrinks();
 
-  await page.getByRole('link', { name: /Brewed Coffee/i }).first().waitFor({ state: 'attached' });
+  await page.getByRole('link', { name: /Cold Brew/i }).first().waitFor({ state: 'attached' });
 
-  // Menu occasionally renders duplicate brewed-coffee entries; second click ensures details panel opens.
-  await app.submenu.clickBrewedCoffee();
-  await app.submenu.clickBrewedCoffee();
+  await app.submenu.clickColdBrew();
+  await app.nestedSubMenu.clickBlackColdBrew();
 
   await page.getByRole('main').getByRole('button', { name: 'Size Medium' }).waitFor({ state: 'visible', timeout: 20000 });
 
-  await app.brewedCoffee.sizeSelection();
-  await app.brewedCoffee.blendSelection();
-  await app.brewedCoffee.reusableCupSelection();
-  await app.brewedCoffee.blackSelection();
-  await app.brewedCoffee.regularSelection();
-  await app.brewedCoffee.doubleDoubleSelection();
-  await app.brewedCoffee.tripleTripleSelection();
-  await app.brewedCoffee.tripleTripleSelection();
-  await app.brewedCoffee.addCream();
-  await app.brewedCoffee.addSugar();
-  await app.brewedCoffee.addChocolateSyrup();
-  await app.brewedCoffee.addWhippedTopping();
-  await app.brewedCoffee.setQuantityTo(3);
-  await app.brewedCoffee.addToOrder();
+  await app.blackColdBrew.sizeSelection();
+  await app.blackColdBrew.setQuantityTo(4);
+  await app.blackColdBrew.reusableCupSelection();
+  await app.blackColdBrew.addToOrder();
   //Checkout Page
   await app.menuPage.clickCartAndCheckout();
   await page.waitForLoadState('domcontentloaded');
@@ -60,14 +49,10 @@ test('@stateful Brewed Coffee Selection', async ({ page, app }) => {
 
   const cartItem = page.getByTestId('cart-item').first();
   await expect(cartItem).toBeVisible({ timeout: 10000 });
-  await expect(cartItem).toContainText('Small Coffee Decaf - Reusable Cup');
-  await expect(cartItem).toContainText('3.5 Cream');
-  await expect(cartItem).toContainText('3.5 Sugar');
-  await expect(cartItem).toContainText('Chocolate Syrup');
-  await expect(cartItem).toContainText('Whipped Topping');
+  await expect(cartItem).toContainText('Large Original Cold Brew - Reusable Cup');
 
   await expect(cartItem.getByText('Item Total')).toBeVisible();
-  await expect(cartItem).toContainText(`$${brewedExpectedTotal}`);
+  await expect(cartItem).toContainText(`$${blackColdBrewExpectedTotal}`);
 
   await app.checkoutPage.continueToPayment();
   await page.waitForLoadState('domcontentloaded');

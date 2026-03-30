@@ -19,14 +19,28 @@ export class BlackColdBrew {
 
   async setQuantityTo(count) {
     await this.selectQuantity.click();
-    const incrementBtn = this.page.getByRole('main').getByRole('button', { name: 'Increment Boston Cream Donut' });
+    const incrementBtn = this.page
+      .getByRole('main')
+      .getByRole('button', { name: /Increment Black Cold Brew/i });
     for (let i = 1; i < count; i++) {
       await incrementBtn.click();
-      //await incrementBtn.click();
     }
   }
 
   async addToOrder() {
-    await this.page.getByRole('main').getByRole('button', { name: /Add.*Boston Cream Donut to order/ }).click();
+    await this.page
+      .getByRole('main')
+      .getByRole('button', { name: /Add.*Black Cold Brew to order/i })
+      .click();
+  }
+
+  async clickWithFallback(locator, timeout = 10000) {
+    await locator.waitFor({ state: 'attached', timeout });
+    try {
+      await locator.click({ timeout });
+    } catch {
+      await locator.scrollIntoViewIfNeeded().catch(() => {});
+      await locator.click({ force: true, timeout });
+    }
   }
 }

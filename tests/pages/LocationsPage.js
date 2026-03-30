@@ -17,7 +17,13 @@ export class LocationsPage {
       .or(page.getByRole('link', { name: /Choose a Location|Pick Up|Location/i }));
     this.selectedStoreChip = page.getByRole('button', { name: /Pick Up\s+1500|Pick Up\s+\d+/i });
     this.yourAddress = page.getByTestId('storelocator-autocomplete');
-    this.storeAccordionBtn = page.getByRole('button', { name: this.storeNamePattern });
+    // Store row: accessible name often differs from TEST_STORE_NAME (extra words, formatting).
+    this.storeAccordionBtn = page
+      .getByRole('button', { name: this.storeNamePattern })
+      .or(page.getByRole('link', { name: this.storeNamePattern }))
+      .or(page.locator('[role="button"]').filter({ hasText: this.storeNamePattern }))
+      .or(page.getByText(this.storeNamePattern))
+      .first();
     /** Any common autocomplete dropdown option (Downshift, Reach, native listbox) */
     this.autocompleteOptions = page.locator(
       [
@@ -44,8 +50,9 @@ export class LocationsPage {
     const firstOpt = this.autocompleteOptions.first();
     await firstOpt.waitFor({ state: 'visible', timeout: 20000 });
     await firstOpt.click({ timeout: 20000 });
-    await this.clickWithFallback(this.storeAccordionBtn);
-    await this.clickWithFallback(this.storeOrderBtn.first());
+    await this.page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    await this.clickWithFallback(this.storeAccordionBtn, 30000);
+    await this.clickWithFallback(this.storeOrderBtn.first(), 30000);
   }
 
   async clickWithFallback(locator, timeout = 10000) {
