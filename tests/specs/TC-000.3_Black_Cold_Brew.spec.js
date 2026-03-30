@@ -73,4 +73,3 @@ test('@stateful Black Cold Brew Selection', async ({ page, app }) => {
   await app.accountInfoPage.signOutYes();
   await expect(page).toHaveURL(/signin/i, { timeout: 15000 });
 });
-//
