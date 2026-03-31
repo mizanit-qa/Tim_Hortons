@@ -17,6 +17,11 @@ export class NestedSubMenu {
       .or(main.getByRole('button', { name: /Black Cold Brew/i }))
       .or(main.getByText('Black Cold Brew', { exact: true }))
       .first();
+    this.classicBreakfastWraps = main
+      .getByRole('link', { name: /Classic Breakfast Wraps/i })
+      .or(main.getByRole('button', { name: /Classic Breakfast Wraps/i }))
+      .or(main.getByText('Classic Breakfast Wraps', { exact: true }))
+      .first();
   }
 
   async clickBrewedCoffee() {
@@ -32,5 +37,10 @@ export class NestedSubMenu {
   async clickBlackColdBrew() {
     await this.blackColdBrew.waitFor({ state: 'visible', timeout: 10000 });
     await this.blackColdBrew.click();
+  }
+
+  async clickClassicBreakfastWraps() {
+    await this.classicBreakfastWraps.waitFor({ state: 'visible', timeout: 10000 });
+    await this.classicBreakfastWraps.click();
   }
 }

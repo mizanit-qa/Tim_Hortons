@@ -7,6 +7,7 @@ export class MenuItems {
     this.coldDrinksTile = page.getByRole('link', { name: /Cold Drinks/i });
     this.newandSeasonalTile = page.getByRole('link', { name: /New & Seasonal/i });
     this.bakedGoodsTile = page.getByRole('link', { name: /Baked Goods/i });
+    this.breakfastTile = page.getByRole('link', { name: /Breakfast/i });
   }
 
   async openMenu() {
@@ -29,5 +30,9 @@ export class MenuItems {
 
   async clickBakedGoods() {
     await this.bakedGoodsTile.click();
+  }
+
+  async clickBreakfast() {
+    await this.breakfastTile.click();
   }
 }

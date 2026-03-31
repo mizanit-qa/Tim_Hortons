@@ -17,6 +17,7 @@ import { AccountInfoPage } from '../pages/AccountInfoPage.js';
 import { NestedSubMenu } from '../components/NestedSubMenu.js';
 import { BostonCreamDonut } from '../components/BostonCreamDonut.js';
 import { BlackColdBrew } from '../components/BlackColdBrew.js';
+import { ClassicBreakfastWraps } from '../components/ClassicBreakfastWraps.js';
 
 
 loadEnvFile();
@@ -124,6 +125,7 @@ export const test = base.extend({
       nestedSubMenu: new NestedSubMenu(page),
       bostonCreamDonut: new BostonCreamDonut(page),
       blackColdBrew: new BlackColdBrew(page),
+      classicBreakfastWraps: new ClassicBreakfastWraps(page),
 
       
       async signInExisting(email = existingUserEmail, code = DEFAULT_TEST_OTP) {
