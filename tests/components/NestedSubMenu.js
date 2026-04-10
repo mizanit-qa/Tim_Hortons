@@ -17,10 +17,11 @@ export class NestedSubMenu {
       .or(main.getByRole('button', { name: /Black Cold Brew/i }))
       .or(main.getByText('Black Cold Brew', { exact: true }))
       .first();
+    // Match category tile or a variant row (e.g. "Sausage Classic Breakfast Wrap"); menu order may require scroll.
     this.classicBreakfastWraps = main
-      .getByRole('link', { name: /Classic Breakfast Wraps/i })
-      .or(main.getByRole('button', { name: /Classic Breakfast Wraps/i }))
-      .or(main.getByText('Classic Breakfast Wraps', { exact: true }))
+      .getByRole('link', { name: /Classic Breakfast Wrap/i })
+      .or(main.getByRole('button', { name: /Classic Breakfast Wrap/i }))
+      .or(main.getByText(/Classic Breakfast Wraps?/i))
       .first();
   }
 
@@ -40,7 +41,8 @@ export class NestedSubMenu {
   }
 
   async clickClassicBreakfastWraps() {
-    await this.classicBreakfastWraps.waitFor({ state: 'visible', timeout: 10000 });
+    await this.classicBreakfastWraps.scrollIntoViewIfNeeded();
+    await this.classicBreakfastWraps.waitFor({ state: 'visible', timeout: 15000 });
     await this.classicBreakfastWraps.click();
   }
 }

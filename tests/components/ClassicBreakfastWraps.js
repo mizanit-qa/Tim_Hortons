@@ -8,14 +8,18 @@ export class ClassicBreakfastWraps {
 
   async setQuantityTo(count) {
     await this.selectQuantity.click();
-    const incrementBtn = this.page.getByRole('main').getByRole('button', { name: 'Increment Classic Breakfast Wraps' });
+    const incrementBtn = this.page
+      .getByRole('main')
+      .getByRole('button', { name: /Increment.*Classic Breakfast Wrap/i });
     for (let i = 1; i < count; i++) {
       await incrementBtn.click();
-      //await incrementBtn.click();
     }
   }
 
   async addToOrder() {
-    await this.page.getByRole('main').getByRole('button', { name: /Add.*Classic Breakfast Wraps to order/ }).click();
+    await this.page
+      .getByRole('main')
+      .getByRole('button', { name: /Add.*Classic Breakfast Wrap.*to order/i })
+      .click();
   }
 }
