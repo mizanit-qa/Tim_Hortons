@@ -75,6 +75,7 @@ const DEFAULT_NON_EXISTING_USER = process.env.NON_EXISTING_USER_EMAIL?.trim();
 /** Skip tests that need credentials instead of throwing at import (e.g. CI without secrets yet). */
 function getMissingCredentialEnvVars() {
   const missing = [];
+  if (!process.env.SITE_PASSWORD?.trim()) missing.push('SITE_PASSWORD');
   if (!DEFAULT_TEST_USER) missing.push('TEST_USER_EMAIL');
   if (!DEFAULT_TEST_OTP) missing.push('TEST_OTP');
   if (!DEFAULT_BAD_OTP) missing.push('TEST_BAD_OTP');
@@ -132,6 +133,7 @@ export const test = base.extend({
         await app.protectedPage.passwordProtection();
         await app.signInPage.userSignIn(email, code);
         await app.homePage.waitForReady();
+        await app.homePage.waitForSignedIn();
       },
       async openSignupProtected() {
         await app.protectedPage.passwordProtectionSignup();

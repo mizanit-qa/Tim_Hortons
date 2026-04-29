@@ -78,7 +78,7 @@ npx playwright test tests/specs/TC-999_New.spec.js --project=chromium --reporter
 Run all:
 
 ```bash
-npx playwright test --project=chromium --reporter=line
+npm test
 ```
 
 Stateful tests only:
@@ -102,6 +102,6 @@ npm run test:stateful
 - Components: `tests/components`
 - Specs: `tests/specs`
 - Example templates:
-  - `tests/specs/TC-013_Template_New_Framework.spec.js`
-  - `tests/specs/TC-014_Template_Signup_Framework.spec.js`
-  - `tests/specs/TC-015_Template_Rewards_Framework.spec.js`
+  - `e2e/temp/TC-013_Template_New_Framework.spec.js`
+  - `tests/specs/TC-914_Template_Signup_Framework.spec.js`
+  - `tests/specs/TC-915_Template_Rewards_Framework.spec.js`
