@@ -1,3 +1,5 @@
+import { getRequiredEnv } from '../utils/loadEnv.js';
+
 export class HomePage {
   constructor(page) {
     this.page = page;
@@ -8,11 +10,13 @@ export class HomePage {
     this.moreLink = page.getByTestId('More');
     this.cateringLink = this.timsCateringLink;
     // Signed-in header: tooltip "My Account" or link href /account (profile)
-    this.myAccountLink = page.getByRole('link', { name: /My Account/i }).or(page.locator('header a[href$="/account"], [role="banner"] a[href$="/account"]').first());
-    this.baseUrl = process.env.BASE_URL;
-    if (!this.baseUrl) {
-      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
-    }
+    this.myAccountLink = page
+      .getByRole('link', { name: /My Account/i })
+      .or(page.locator('a[href$="/account"]').first());
+  }
+
+  get baseUrl() {
+    return getRequiredEnv('BASE_URL');
   }
 
   async homepageMenu() {
@@ -27,6 +31,10 @@ export class HomePage {
 
   async waitForReady() {
     await this.menuLink.waitFor({ state: 'visible', timeout: 20000 });
+  }
+
+  async waitForSignedIn() {
+    await this.myAccountLink.first().waitFor({ state: 'visible', timeout: 30000 });
   }
 
   async timsforGood() {

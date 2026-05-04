@@ -66,35 +66,20 @@ export class CheckoutPage {
   }
 
   async selectServiceModeWithFallback() {
-    const [curbsideExists, pickupExists, dineInExists, driveThruExists] = await Promise.all([
-      this.curbsidePickupRadio.count().then((n) => n > 0).catch(() => false),
-      this.pickUpRadio.count().then((n) => n > 0).catch(() => false),
-      this.dineInRadio.count().then((n) => n > 0).catch(() => false),
-      this.driveThruRadio.count().then((n) => n > 0).catch(() => false),
-    ]);
-    const allPreferredModesAvailable = curbsideExists && pickupExists && dineInExists;
+    const serviceModes = [
+      { name: 'Dine In', locator: this.dineInRadio },
+      { name: 'Pick Up', locator: this.pickUpRadio },
+      { name: 'Curbside Pickup', locator: this.curbsidePickupRadio },
+      { name: 'Drive Thru', locator: this.driveThruRadio },
+    ];
 
-    if (!allPreferredModesAvailable && driveThruExists) {
-      await this.clickWithFallback(this.driveThruRadio);
-      return 'Drive Thru';
+    for (const mode of serviceModes) {
+      if (await mode.locator.count().then((n) => n > 0).catch(() => false)) {
+        await this.clickWithFallback(mode.locator);
+        return mode.name;
+      }
     }
 
-    if (dineInExists) {
-      await this.clickWithFallback(this.dineInRadio);
-      return 'Dine In';
-    }
-    if (pickupExists) {
-      await this.clickWithFallback(this.pickUpRadio);
-      return 'Pick Up';
-    }
-    if (curbsideExists) {
-      await this.clickWithFallback(this.curbsidePickupRadio);
-      return 'Curbside Pickup';
-    }
-    if (driveThruExists) {
-      await this.clickWithFallback(this.driveThruRadio);
-      return 'Drive Thru';
-    }
     const orderHeading = this.page.getByRole('heading', { name: /Order/i }).first();
     const headingText = (await orderHeading.textContent().catch(() => '')) || '';
     if (/drive\s*thru/i.test(headingText)) return 'Drive Thru';
@@ -106,6 +91,10 @@ export class CheckoutPage {
 
   async turnOffRedeemPoints() {
     await this.redeemPointsToggle.waitFor({ state: 'visible', timeout: 10000 });
+    const initialState = await this.getRedeemPointsState();
+    if (initialState === false) {
+      return;
+    }
     try {
       await this.redeemPointsToggle.click({ timeout: 5000 });
     } catch {
@@ -114,6 +103,34 @@ export class CheckoutPage {
       );
       await this.clickWithFallback(clickableWrapper);
     }
+    const finalState = await this.getRedeemPointsState();
+    if (finalState === true) {
+      throw new Error('Redeem points toggle was clicked but did not turn off.');
+    }
+  }
+
+  async getRedeemPointsState() {
+    const toggle = this.redeemPointsToggle.first();
+    const states = await toggle.evaluate((el) => {
+      const node = el;
+      const input = node.matches('input') ? node : node.querySelector('input');
+      return {
+        ariaChecked: node.getAttribute('aria-checked'),
+        ariaPressed: node.getAttribute('aria-pressed'),
+        dataState: node.getAttribute('data-state'),
+        checked: input ? input.checked : undefined,
+      };
+    }).catch(() => ({}));
+
+    if (states.checked === true) return true;
+    if (states.checked === false) return false;
+    if (states.ariaChecked === 'true') return true;
+    if (states.ariaChecked === 'false') return false;
+    if (states.ariaPressed === 'true') return true;
+    if (states.ariaPressed === 'false') return false;
+    if (states.dataState === 'checked' || states.dataState === 'on' || states.dataState === 'open') return true;
+    if (states.dataState === 'unchecked' || states.dataState === 'off' || states.dataState === 'closed') return false;
+    return undefined;
   }
 
   async incrementQuantity() {
