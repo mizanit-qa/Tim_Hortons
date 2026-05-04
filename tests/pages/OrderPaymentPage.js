@@ -33,7 +33,9 @@ export class OrderPaymentPage {
       // Continue button
       this.continueOrderButton = page.getByTestId('continue-order');
 
-      this.confirmYourStorePlaceOrderButton = page.getByTestId('place-order');
+      this.confirmYourStorePlaceOrderButton = page
+        .getByTestId('place-order')
+        .or(page.getByRole('button', { name: /Place Order|Confirm|Submit Order/i }));
     }
 
     async waitForPaymentReady(timeout = 20000) {
@@ -103,11 +105,33 @@ export class OrderPaymentPage {
     }
 
     async continueToOrder() {
+        await this.dismissCookieBanner();
         await this.clickWithFallback(this.continueOrderButton);
     }
 
     async confirmYourStorePlaceOrder() {
+        await this.dismissCookieBanner();
         await this.clickWithFallback(this.confirmYourStorePlaceOrderButton);
+    }
+
+    async dismissCookieBanner() {
+        const acceptAll = this.page.getByRole('button', { name: /Accept All/i }).first();
+        const close = this.page
+            .getByRole('button', { name: /^Close$/i })
+            .or(this.page.locator('button[aria-label="Close"]'))
+            .first();
+        await acceptAll.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+        if (await acceptAll.isVisible().catch(() => false)) {
+            await acceptAll.click({ timeout: 5000 }).catch(async () => {
+                await acceptAll.click({ force: true, timeout: 5000 }).catch(() => {});
+            });
+            return;
+        }
+        if (await close.isVisible().catch(() => false)) {
+            await close.click({ timeout: 5000 }).catch(async () => {
+                await close.click({ force: true, timeout: 5000 }).catch(() => {});
+            });
+        }
     }
 
     async clickWithFallback(locator, timeout = 8000) {

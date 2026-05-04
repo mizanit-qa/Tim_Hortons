@@ -1,27 +1,13 @@
+import { getRequiredEnv } from '../utils/loadEnv.js';
+
 export class ProtectedPage {
   constructor(page) {
     this.page = page;
-    this.baseUrl = this.readEnv('BASE_URL');
-    this.sitePasswordValue = this.readEnv('SITE_PASSWORD');
-    if (!this.baseUrl) {
-      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
-    }
-    if (!this.sitePasswordValue) {
-      throw new Error('SITE_PASSWORD is required. Set it in .env (see .env.example).');
-    }
     this.Card = ".card";
     this.SitePassword = "input[placeholder='Password']";
     this.SubmitBtn = ".button";
     this.CookiesClose = "button[aria-label='Close']";
     this.LanguageApplyBtn = ".Button__BaseButton-sc-cbhjo9-0.bQGVPR";
-  }
-
-  readEnv(key, fallback) {
-    const value = process.env[key];
-    if (typeof value === 'string' && value.trim()) {
-      return value.trim();
-    }
-    return fallback;
   }
 
   async clickIfVisible(locator, timeout = 5000) {
@@ -35,10 +21,12 @@ export class ProtectedPage {
   }
 
   makeUrl(path = '/') {
-    return new URL(path, this.baseUrl).toString();
+    const baseUrl = getRequiredEnv('BASE_URL');
+    return new URL(path, baseUrl).toString();
   }
 
   async openProtected(path = '/') {
+    const sitePasswordValue = getRequiredEnv('SITE_PASSWORD');
     await this.page.goto(this.makeUrl(path), { waitUntil: 'domcontentloaded' });
     const passwordInput = this.page.locator(this.SitePassword).first();
     const submitButton = this.page.locator(this.SubmitBtn).first();
@@ -46,7 +34,7 @@ export class ProtectedPage {
     await passwordInput.waitFor({ state: 'visible', timeout: 20000 });
     await submitButton.waitFor({ state: 'visible', timeout: 20000 });
 
-    await passwordInput.fill(this.sitePasswordValue);
+    await passwordInput.fill(sitePasswordValue);
     await submitButton.click();
     await this.page.waitForLoadState('domcontentloaded');
 

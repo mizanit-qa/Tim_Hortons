@@ -3,6 +3,8 @@ import { loadEnvFile } from './tests/utils/loadEnv.js';
 
 loadEnvFile();
 
+const hasAccountPool = Boolean(process.env.TEST_USER_EMAILS?.trim());
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -15,7 +17,7 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI || !hasAccountPool ? 1 : undefined,
   reporter: 'html',
   use: {
     baseURL: process.env.BASE_URL || undefined,

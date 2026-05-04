@@ -1,20 +1,9 @@
 import { expect } from '@playwright/test';
+import { getRequiredEnv } from '../utils/loadEnv.js';
 
 export class SignInPage {
   constructor(page) {
     this.page = page;
-    this.baseUrl = process.env.BASE_URL;
-    this.defaultOtpCode = process.env.TEST_OTP;
-    this.defaultBadOtpCode = process.env.TEST_BAD_OTP;
-    if (!this.baseUrl) {
-      throw new Error('BASE_URL is required. Set it in .env (see .env.example).');
-    }
-    if (!this.defaultOtpCode) {
-      throw new Error('TEST_OTP is required. Set it in .env (see .env.example).');
-    }
-    if (!this.defaultBadOtpCode) {
-      throw new Error('TEST_BAD_OTP is required. Set it in .env (see .env.example).');
-    }
     this.SignInBtnLanding = page
       .getByRole('button', { name: /^Sign In$/ })
       .or(page.getByRole('link', { name: /^Sign In$/ }))
@@ -30,7 +19,7 @@ export class SignInPage {
   }
 
   async gotoHome() {
-    await this.page.goto(this.baseUrl, { waitUntil: "domcontentloaded" });
+    await this.page.goto(getRequiredEnv('BASE_URL'), { waitUntil: "domcontentloaded" });
   }
 
   async enterEmailAndContinue(email) {
@@ -54,7 +43,7 @@ export class SignInPage {
     await submitBtn.first().click();
   }
 
-  async userSignIn(email, code = this.defaultOtpCode) {
+  async userSignIn(email, code = getRequiredEnv('TEST_OTP')) {
     await this.enterEmailAndContinue(email);
     await this.ValidationCode.waitFor({ state: 'visible', timeout: 30000 });
     await this.ValidationCode.fill(code);
@@ -64,7 +53,7 @@ export class SignInPage {
     await this.enterEmailAndContinue(email);
   }
 
-  async userSignInBadCode(email, code = this.defaultBadOtpCode) {
+  async userSignInBadCode(email, code = getRequiredEnv('TEST_BAD_OTP')) {
     await this.enterEmailAndContinue(email);
     await this.ValidationCode.waitFor({ state: 'visible', timeout: 30000 });
     await this.ValidationCode.fill(code);

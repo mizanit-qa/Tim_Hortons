@@ -31,3 +31,11 @@ export function loadEnvFile(envPath = '.env') {
     }
   }
 }
+
+export function getRequiredEnv(name, message) {
+  const value = process.env[name];
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+  throw new Error(message ?? `${name} is required. Set it in .env (see .env.example).`);
+}
